@@ -13,6 +13,10 @@ public class Image {
       this.id=GUID.getGUID();
       this.path=path;
     }
+    public Image(int type){ //测试
+        this.type=type;
+        this.id=GUID.getGUID();
+    }
 
     public void setPath(String path) {
         this.path = path;

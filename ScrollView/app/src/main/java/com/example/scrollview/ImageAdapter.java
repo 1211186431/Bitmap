@@ -40,11 +40,17 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = LayoutInflater.from(mContext).inflate(R.layout.item,parent,false);
-        ImageView image = (ImageView) convertView.findViewById(R.id.image);
-        TextView id = (TextView) convertView.findViewById(R.id.GUID);
-        image.setImageBitmap(mData.get(position).getBitmap());
-        id.setText(mData.get(position).getId());
+
+        if(mData.get(position).getType()==1){
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item,parent,false);
+            ImageView image = (ImageView) convertView.findViewById(R.id.image);
+            TextView id = (TextView) convertView.findViewById(R.id.GUID);
+            image.setImageBitmap(mData.get(position).getBitmap());
+            id.setText(mData.get(position).getId());
+        }
+        if (mData.get(position).getType()==2){
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item2,parent,false);
+        }
         return convertView;
     }
 }
