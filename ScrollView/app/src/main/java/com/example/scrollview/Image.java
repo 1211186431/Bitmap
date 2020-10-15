@@ -9,12 +9,13 @@ public class Image {
     String path;
     public Image(Bitmap bitmap,String path,int type){
       this.bitmap=bitmap;
-      this.type=type;
+      this.type=type;  //1是图片  2是音乐  3是视频 4是画板
       this.id=GUID.getGUID();
       this.path=path;
     }
-    public Image(int type){ //测试
+    public Image(String path,int type){ //测试
         this.type=type;
+        this.path=path;
         this.id=GUID.getGUID();
     }
 

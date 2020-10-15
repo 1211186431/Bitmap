@@ -39,7 +39,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/music"/>
+        android:id="@+id/music"
+        android:text="music"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/video"
+        android:text="video"/>
 </LinearLayout>
 
             <ListView

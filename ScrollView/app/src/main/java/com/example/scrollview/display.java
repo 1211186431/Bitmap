@@ -14,7 +14,7 @@ import java.io.FileNotFoundException;
 public class display extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {   //ViewPager+fragment实现滚动有时间再做
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
         Intent intent=getIntent();
