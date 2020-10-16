@@ -12,14 +12,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.scrollview.otherActivity.DrawActivity;
+import com.example.scrollview.otherActivity.MusicActivity;
+import com.example.scrollview.otherActivity.VideoActivity;
+import com.example.scrollview.otherActivity.PhotoActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,26 +35,28 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Image> list = new ArrayList<>();
-    String currentPhotoPath="";
+    String currentPhotoPath = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initPhotoError();  //https://blog.csdn.net/weixin_42105630/article/details/86305354
-        Button music = findViewById(R.id.music);
-        music.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // addlist(new Image(2));
-            }
-        });
+        Button record = findViewById(R.id.record);
         Button btn1 = findViewById(R.id.btn1);
         Button photo = findViewById(R.id.photo);
-        Button video =findViewById(R.id.video);
+        Button video = findViewById(R.id.video);
+        Button draw = findViewById(R.id.draw);
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                startActivityForResult(intent,4);
+            }
+        });
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +85,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
-                startActivityForResult(intent,3);
+                startActivityForResult(intent, 3);
+            }
+        });
+        draw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+                startActivityForResult(intent, 0);
             }
         });
         final ListView listView = findViewById(R.id.list_item);
@@ -85,24 +100,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.v("chick", "123");
-                TextView txtId=view.findViewById(R.id.GUID);
-                String id=txtId.getText().toString();
-                for(int n=0;n<list.size();n++){
-                    if(list.get(n).getId().equals(id)){
-                        if(list.get(n).getType()==1){
-                            Intent intent=new Intent(MainActivity.this,display.class);
-                            intent.putExtra("path",list.get(n).getPath()); //忘初始化path了
-                            startActivity(intent);
+                TextView txtId = view.findViewById(R.id.GUID);
+                String id = txtId.getText().toString();
+                for (int n = 0; n < list.size(); n++) {
+                    if (list.get(n).getId().equals(id)) {
+                        switch (list.get(n).getType()) {
+                            case 1:
+                                Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
+                                intent.putExtra("path", list.get(n).getPath()); //忘初始化path了
+                                startActivity(intent);
+                                break;
+                            case 2:
+                                Intent intent2 = new Intent(MainActivity.this, MusicActivity.class);
+                                intent2.putExtra("path2", list.get(n).getPath()); //忘初始化path了
+                                startActivity(intent2);
+                                break;
+                            case 3:
+                                Intent intent3 = new Intent(MainActivity.this, VideoActivity.class);
+                                intent3.putExtra("path", list.get(n).getPath()); //忘初始化path了
+                                startActivity(intent3);
+                                break;
+                            case 4:
+                                Intent intent4 = new Intent(MainActivity.this, DrawActivity.class);
+                                intent4.putExtra("path4", list.get(n).getPath()); //忘初始化path了
+                                startActivity(intent4);
+                                break;
                         }
-                        if (list.get(n).getType()==2){
-
-                        }
-                        if(list.get(n).getType()==3){
-                            Intent intent=new Intent(MainActivity.this,VideoActivity.class);
-                            intent.putExtra("path",list.get(n).getPath()); //忘初始化path了
-                            startActivity(intent);
-                        }
-                       break;
+                        break;
                     }
                 }
 
@@ -116,43 +140,60 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            Uri uri = data.getData();
+
             switch (requestCode) {
-                case 1:
-                          //有时会黑屏 试试用线程异步操作
+                case 1:   //相册照片
+                    //有时会黑屏 试试用线程异步操作
+                    Uri uri = data.getData();
                     ContentResolver cr = this.getContentResolver();
                     try {
                         Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         String imageFileName = "JPEG_" + timeStamp + ".jpg";
-                        String filePath=getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/"+imageFileName;
-                        saveBitmap(bitmap,filePath);
-                        addlist(new Image(bitmap, filePath, 1));
+                        String filePath = getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/" + imageFileName;
+                        saveBitmap(bitmap, filePath);
+                        addlist(new Image(filePath, 1));
                     } catch (FileNotFoundException e) {
                         Log.e("Exception", e.getMessage(), e);
                     }
                     break;
-                case 2:
+                case 2:   //拍照不用获取uri，会有问题
                     FileInputStream fs = null;
                     try {
                         File f = new File(currentPhotoPath);
-                        Log.v("path",currentPhotoPath);
                         fs = new FileInputStream(f);
                         Bitmap bitmap = BitmapFactory.decodeStream(fs);
-                        addlist(new Image(bitmap,currentPhotoPath, 1));
+                        addlist(new Image(currentPhotoPath, 1));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                     break;
-                case 3:
-                    String filePath = getAudioFilePathFromUri(uri);
-                    Log.v("path",filePath);
-                    addlist(new Image(filePath,3));
+                case 3:   //录像
+                    Uri uri2 = data.getData();
+                    String filePath = getAudioFilePathFromUri(uri2);
+                    Log.v("path", filePath);
+                    addlist(new Image(filePath, 3));
                     break;
+                case 4:  //录音
+                    Uri uri3 = data.getData();
+                    String filePath2 = getAudioFilePathFromUri(uri3);
+                    Log.v("path", filePath2);
+                    addlist(new Image(filePath2, 2));
                 default:
                     break;
             }
-
+        }
+        if (requestCode == 0 && resultCode == 11) {
+            FileInputStream fs = null;
+            File f = new File(data.getStringExtra("path"));
+            //      Log.v("path",data.getStringExtra("path"));
+            try {
+                fs = new FileInputStream(f);
+                Bitmap bitmap = BitmapFactory.decodeStream(fs);
+                addlist(new Image(data.getStringExtra("path"), 4));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -190,12 +231,13 @@ public class MainActivity extends AppCompatActivity {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
+
     /**
      * 保存bitmap到本地
      *
      * @param bitmap Bitmap
      */
-    public static void saveBitmap(Bitmap bitmap,String path) {
+    public static void saveBitmap(Bitmap bitmap, String path) {
         String savePath;
         File filePic;
         if (Environment.getExternalStorageState().equals(
@@ -222,4 +264,15 @@ public class MainActivity extends AppCompatActivity {
         Log.i("tag", "saveBitmap success: " + filePic.getAbsolutePath());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (list == null) {
+
+        } else {
+            ImageAdapter adapter = new ImageAdapter(list, MainActivity.this);
+            ListView l = findViewById(R.id.list_item);
+            l.setAdapter(adapter);
+        }
+    }
 }

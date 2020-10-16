@@ -39,14 +39,34 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/music"
-        android:text="music"/>
+        android:id="@+id/record"
+        android:text="Record"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/video"
         android:text="video"/>
 </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/draw"
+                    android:text="draw"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/local_m"
+                    android:text="local_m"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/local_v"
+                    android:text="local_v"/>
+            </LinearLayout>
 
             <ListView
                 android:layout_width="match_parent"

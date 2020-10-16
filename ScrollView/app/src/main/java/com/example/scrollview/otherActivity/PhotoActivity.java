@@ -1,4 +1,4 @@
-package com.example.scrollview;
+package com.example.scrollview.otherActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,10 +8,12 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.example.scrollview.R;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class display extends AppCompatActivity {
+public class PhotoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {   //ViewPager+fragment实现滚动有时间再做

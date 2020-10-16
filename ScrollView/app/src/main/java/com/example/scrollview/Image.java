@@ -3,18 +3,11 @@ package com.example.scrollview;
 import android.graphics.Bitmap;
 
 public class Image {
-    Bitmap bitmap;
     int type;
     String id;
     String path;
-    public Image(Bitmap bitmap,String path,int type){
-      this.bitmap=bitmap;
-      this.type=type;  //1是图片  2是音乐  3是视频 4是画板
-      this.id=GUID.getGUID();
-      this.path=path;
-    }
-    public Image(String path,int type){ //测试
-        this.type=type;
+    public Image(String path,int type){
+        this.type=type;//1是图片  2是音乐  3是视频 4是画板
         this.path=path;
         this.id=GUID.getGUID();
     }
@@ -33,14 +26,6 @@ public class Image {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
     }
 
     public int getType() {

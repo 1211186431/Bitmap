@@ -12,10 +12,10 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VideoActivity"/>
-        <activity android:name=".display">
-
-        </activity>
+        <activity android:name=".otherActivity.VideoActivity"/>
+        <activity android:name=".otherActivity.PhotoActivity"/>
+        <activity android:name=".otherActivity.DrawActivity"/>
+        <activity android:name=".otherActivity.MusicActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
