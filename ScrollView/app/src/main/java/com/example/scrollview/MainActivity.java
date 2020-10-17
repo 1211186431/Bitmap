@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         Button photo = findViewById(R.id.photo);
         Button video = findViewById(R.id.video);
         Button draw = findViewById(R.id.draw);
+        Button local_m=findViewById(R.id.local_m);
+        Button local_v=findViewById(R.id.local_v);
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +97,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 0);
             }
         });
+        local_v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
+                startActivityForResult(intent, 3);
+            }
+
+        });
+        local_m.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("audio/*"); //选择音频
+                startActivityForResult(intent, 4);
+            }
+        });
         final ListView listView = findViewById(R.id.list_item);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -108,29 +127,31 @@ public class MainActivity extends AppCompatActivity {
                             case 1:
                                 Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
                                 intent.putExtra("path", list.get(n).getPath()); //忘初始化path了
-                                startActivity(intent);
+                                intent.putExtra("n",n+"");
+                                startActivityForResult(intent, 0);
                                 break;
                             case 2:
                                 Intent intent2 = new Intent(MainActivity.this, MusicActivity.class);
                                 intent2.putExtra("path2", list.get(n).getPath()); //忘初始化path了
-                                startActivity(intent2);
+                                intent2.putExtra("n",n+"");
+                                startActivityForResult(intent2, 0);
                                 break;
                             case 3:
                                 Intent intent3 = new Intent(MainActivity.this, VideoActivity.class);
-                                intent3.putExtra("path", list.get(n).getPath()); //忘初始化path了
-                                startActivity(intent3);
+                                intent3.putExtra("path3", list.get(n).getPath()); //忘初始化path了
+                                intent3.putExtra("n",n+"");
+                                startActivityForResult(intent3, 0);
                                 break;
                             case 4:
                                 Intent intent4 = new Intent(MainActivity.this, DrawActivity.class);
                                 intent4.putExtra("path4", list.get(n).getPath()); //忘初始化path了
-                                startActivity(intent4);
+                                intent4.putExtra("n",n+"");
+                                startActivityForResult(intent4, 0);
                                 break;
                         }
                         break;
                     }
                 }
-
-
             }
         });
 
@@ -152,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         String imageFileName = "JPEG_" + timeStamp + ".jpg";
                         String filePath = getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/" + imageFileName;
                         saveBitmap(bitmap, filePath);
-                        addlist(new Image(filePath, 1));
+                        list.add(new Image(filePath, 1));
                     } catch (FileNotFoundException e) {
                         Log.e("Exception", e.getMessage(), e);
                     }
@@ -163,37 +184,52 @@ public class MainActivity extends AppCompatActivity {
                         File f = new File(currentPhotoPath);
                         fs = new FileInputStream(f);
                         Bitmap bitmap = BitmapFactory.decodeStream(fs);
-                        addlist(new Image(currentPhotoPath, 1));
+                        list.add(new Image(currentPhotoPath, 1));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                     break;
-                case 3:   //录像
+                case 3:   //视频
                     Uri uri2 = data.getData();
                     String filePath = getAudioFilePathFromUri(uri2);
                     Log.v("path", filePath);
-                    addlist(new Image(filePath, 3));
+                    list.add(new Image(filePath, 3));
                     break;
-                case 4:  //录音
+                case 4:  //音频
                     Uri uri3 = data.getData();
                     String filePath2 = getAudioFilePathFromUri(uri3);
                     Log.v("path", filePath2);
-                    addlist(new Image(filePath2, 2));
+                    list.add(new Image(filePath2, 2));
                 default:
                     break;
             }
         }
-        if (requestCode == 0 && resultCode == 11) {
-            FileInputStream fs = null;
-            File f = new File(data.getStringExtra("path"));
-            //      Log.v("path",data.getStringExtra("path"));
-            try {
-                fs = new FileInputStream(f);
-                Bitmap bitmap = BitmapFactory.decodeStream(fs);
-                addlist(new Image(data.getStringExtra("path"), 4));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+        if (requestCode == 0) {
+            switch (resultCode){
+                case 11:
+                    FileInputStream fs = null;
+                    File f = new File(data.getStringExtra("path"));
+                    //      Log.v("path",data.getStringExtra("path"));
+                    try {
+                        fs = new FileInputStream(f);
+                        Bitmap bitmap = BitmapFactory.decodeStream(fs);
+                        list.add(new Image(data.getStringExtra("path"), 4));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 12:
+                    int n=Integer.parseInt(data.getStringExtra("change_n"));
+                    list.get(n).setPath(data.getStringExtra("path"));
+                    break;
+                default:
+                    break;
             }
+
+        }
+        if(resultCode==111){  //所有返回后删除
+           int n=Integer.parseInt(data.getStringExtra("delete_n"));
+            list.remove(n);
         }
 
     }
@@ -206,8 +242,7 @@ public class MainActivity extends AppCompatActivity {
         return cursor.getString(index);
     }
 
-    public void addlist(Image image) {
-        list.add(image);
+    public void refresh_list() {
         ImageAdapter adapter = new ImageAdapter(list, MainActivity.this);
         ListView l = findViewById(R.id.list_item);
         l.setAdapter(adapter);
@@ -270,9 +305,7 @@ public class MainActivity extends AppCompatActivity {
         if (list == null) {
 
         } else {
-            ImageAdapter adapter = new ImageAdapter(list, MainActivity.this);
-            ListView l = findViewById(R.id.list_item);
-            l.setAdapter(adapter);
+            refresh_list();
         }
     }
 }

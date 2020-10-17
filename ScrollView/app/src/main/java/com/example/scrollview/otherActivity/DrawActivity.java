@@ -32,12 +32,14 @@ public class DrawActivity extends AppCompatActivity {
     LinkedList<Path> r=new LinkedList<Path>();
     LinkedList<Integer> rcolor=new LinkedList<Integer>();
     LinkedList<Integer> rsize=new LinkedList<Integer>();
+    String n="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
         Intent intent=getIntent();
         CustomView c=findViewById(R.id.Custom);
+        n=intent.getStringExtra("n");
         final String path=intent.getStringExtra("path4");
         if(path==null){
 
@@ -54,6 +56,7 @@ public class DrawActivity extends AppCompatActivity {
         Button down=findViewById(R.id.size_down);
         Button go=findViewById(R.id.go);
         Button eraser=findViewById(R.id.Eraser);
+        Button delete=findViewById(R.id.delete);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +79,8 @@ public class DrawActivity extends AppCompatActivity {
                     Intent intent=
                             new Intent(DrawActivity.this, MainActivity.class);
                     intent.putExtra("path",filePath);
-                    setResult(11,intent);
+                    intent.putExtra("change_n",n);
+                    setResult(12,intent);
                     finish();
                 }
 
@@ -147,6 +151,17 @@ public class DrawActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CustomView c=findViewById(R.id.Custom);
                 c.setColor(Color.WHITE);
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=
+                        new Intent(DrawActivity.this, MainActivity.class);
+                intent.putExtra("delete_n",n);
+                setResult(111,intent);
+                Log.v("delete",n);
+                finish();
             }
         });
     }

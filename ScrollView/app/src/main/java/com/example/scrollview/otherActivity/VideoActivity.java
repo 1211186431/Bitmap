@@ -14,6 +14,7 @@ import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.scrollview.MainActivity;
 import com.example.scrollview.R;
 
 public class VideoActivity extends AppCompatActivity {
@@ -21,7 +22,9 @@ public class VideoActivity extends AppCompatActivity {
     int istouch = 1;
     SeekBar seekBar;
     String Path="";
+    String n="";
     VideoView mVideoView;
+    Boolean isStopThread = false;
     //处理进度条更新
     Handler mHandler = new Handler() {
         @Override
@@ -55,7 +58,10 @@ public class VideoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
         Intent intent=getIntent();
-        Path=intent.getStringExtra("path");
+        Path=intent.getStringExtra("path3");
+        n=intent.getStringExtra("n");
+        Button back=findViewById(R.id.back);
+        Button delete=findViewById(R.id.delete);
        seekBar = (SeekBar) findViewById(R.id.seekbar);
         mVideoView=findViewById(R.id.video);
         mVideoView.setVideoPath(Path);//设置视频文件
@@ -72,6 +78,8 @@ public class VideoActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             while (true) {
+                                if(isStopThread)
+                                    break;
                                 mHandler.sendEmptyMessage(0);
                                 try {
                                     sleep(milliseconds);
@@ -153,5 +161,33 @@ public class VideoActivity extends AppCompatActivity {
                 istouch = 1;
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mVideoView.stopPlayback();
+                finish();
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mVideoView.stopPlayback();
+
+                Intent intent =
+                        new Intent(VideoActivity.this, MainActivity.class);
+                intent.putExtra("delete_n", n);
+                setResult(111, intent);
+                Log.v("delete", n);
+                finish();
+            }
+        });
+    }
+    @Override
+
+    protected void onDestroy() {
+
+        super.onDestroy();
+        isStopThread = true;  //利用变量控制线程结束 ，
+        //https://blog.csdn.net/liulanzaijia/article/details/85780831?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase
     }
 }
