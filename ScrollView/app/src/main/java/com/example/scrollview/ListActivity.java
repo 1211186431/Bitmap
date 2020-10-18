@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,29 +15,54 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.scrollview.db.ListDB;
+import com.example.scrollview.otherActivity.DrawActivity;
+import com.example.scrollview.otherActivity.MusicActivity;
+import com.example.scrollview.otherActivity.PhotoActivity;
+import com.example.scrollview.otherActivity.VideoActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
-public class listActivity extends AppCompatActivity {
-
+public class ListActivity extends AppCompatActivity {
+    Boolean needRefresh=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         ListDB listDB=new ListDB(this);
         ArrayList<Map<String, String>> items = listDB.getAlllist();
-        SimpleAdapter adapter = new SimpleAdapter(listActivity.this, items, R.layout.item_list,
+        SimpleAdapter adapter = new SimpleAdapter(ListActivity.this, items, R.layout.item_list,
                 new String[]{"l_id","myText"},
                 new int[]{R.id.textId, R.id.textViewWord});
+        needRefresh=true;
         ListView list = (ListView)findViewById(R.id.list);
         registerForContextMenu(list);
         list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView txtId=view.findViewById(R.id.textId);
+                TextView t2=view.findViewById(R.id.textViewWord);
+                String id=txtId.getText().toString();
+                String myText=t2.getText().toString();
+                Intent intent=
+                        new Intent(ListActivity.this,MainActivity.class);  //没有直接传回去，传sheet。直接传有问题
+                intent.putExtra("l_id",id);
+                intent.putExtra("myText",myText);
+                Log.v("Tag","1+"+id);
+                startActivity(intent);
+            }
+        });
     }
 
     public void onclickinsert(View view) {
-        ListDB songsDB=new ListDB(this);
-        Intent intent=new Intent(listActivity.this,MainActivity.class);
+        ListDB listDB=new ListDB(this);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String l_id=listDB.InsertUserSql("",-1,timeStamp);
+        Intent intent=new Intent(ListActivity.this,MainActivity.class);
+        intent.putExtra("l_id",l_id);
         startActivity(intent);
     }
     @Override
@@ -74,7 +100,7 @@ public class listActivity extends AppCompatActivity {
         new android.app.AlertDialog.Builder(this).setTitle("delete").setMessage("是否真的删除?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                ListDB listDB=new ListDB(listActivity.this);
+                ListDB listDB=new ListDB(ListActivity.this);
                 listDB.DeleteUseSql(strId);
                 refreshList(listDB);
             }
@@ -92,5 +118,12 @@ public class listActivity extends AppCompatActivity {
                 new String[]{"l_id", "myText"},
                 new int[]{R.id.textId, R.id.textViewWord});
         list.setAdapter(adapter);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (needRefresh) {
+            refreshList(new ListDB(this));
+        }
     }
 }

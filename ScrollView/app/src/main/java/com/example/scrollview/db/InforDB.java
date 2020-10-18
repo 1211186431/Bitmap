@@ -3,10 +3,11 @@ package com.example.scrollview.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.scrollview.GUID;
+import com.example.scrollview.Image;
 import com.example.scrollview.db.javabean.List;
+import com.example.scrollview.db.javabean.Infor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,24 +26,25 @@ public class InforDB {
     }
 
 
-    public ArrayList<Map<String, String>> getAllInf() {
+    public ArrayList<Image> getInf(String l_id) {
         if (mDbHelper == null) {
             return null;
         }
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String[] projection = {
-                "l_id",
-                "myText",
-                "star",
-                "mytime"
+                "i_id",
+                "mypath",
+                "mytype",
+                "l_id"
         };
-
+        String where = "l_id= ?";
+        String[] params = {l_id};
         Cursor c = db.query(
-                "list",  // The table to query
+                "infor",  // The table to query
                 projection,                               // The columns to return
-                null,                                // The columns for the WHERE clause
-                null,                            // The values for the WHERE clause
+                where,                                // The columns for the WHERE clause
+                params,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
                 null                                 // The sort order
@@ -52,41 +54,37 @@ public class InforDB {
     }
 
     //将游标转化
-    private ArrayList<Map<String, String>> ConvertCursor(Cursor cursor) {
-        ArrayList<Map<String, String>> result = new ArrayList<>();
+    private ArrayList<Image> ConvertCursor(Cursor cursor) {
+        ArrayList<Image> result = new ArrayList<>();
         while (cursor.moveToNext()) {
-            Map<String, String> map = new HashMap<>();
-            Log.v("Tag",cursor.getString(cursor.getColumnIndex("l_id")));
-            map.put("l_id", cursor.getString(cursor.getColumnIndex("l_id")));
-            map.put("myText", cursor.getString(cursor.getColumnIndex("myText")));
-            map.put("star", cursor.getInt(cursor.getColumnIndex("star"))+"");
-            map.put("mytime", cursor.getString(cursor.getColumnIndex("mytime")));
-            result.add(map);
+           Image image=new Image(cursor.getString(cursor.getColumnIndex("mypath")),
+                   cursor.getInt(cursor.getColumnIndex("mytype")));
+            result.add(image);
         }
         return result;
     }
 
     //增加
-    public  void InsertUserSql(String myText, int star,String mytime) {
-        String sql = "insert into  list(l_id,myText,star,mytime) values(?,?,?,?)";
+    public  void InsertSql(Image image, String l_id) {
+        String sql = "insert into  infor(i_id,mypath,mytype,l_id) values(?,?,?,?)";
         //Gets the data repository in write mode*/
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.execSQL(sql, new String[]{GUID.getGUID(),myText,star+"",mytime});
+        db.execSQL(sql, new String[]{image.getId(),image.getPath(),image.getType()+"",l_id});
     }
 
     //删除
-    public void DeleteUseSql(String strId) {
-        String sql = " DELETE FROM " + "list"+
+    public void DeleteSql(String strId) {
+        String sql = " DELETE FROM " + "infor"+
                 "  WHERE l_id= ?";
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         db.execSQL(sql, new String[]{strId});
     }
 
-    //更新单词
-    public void UpdateUseSql(List list) {
+    //更新
+    public void UpdateSql(Infor infor) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        String sql = "update list set mytime=?,myText=?,star=? where _id=?";
-        db.execSQL(sql, new String[]{list.getMytime(),list.getMyText(),list.getStar()+"",list.getL_id()});
+        String sql = "update infor set mypath=?,mytype=?,l_id=? where i_id=?";
+        db.execSQL(sql, new String[]{infor.getMypath(),infor.getMytype()+"",infor.getL_id(),infor.getI_id()});
     }
 
 

@@ -18,10 +18,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.scrollview.db.InforDB;
+import com.example.scrollview.db.ListDB;
+import com.example.scrollview.db.javabean.Infor;
 import com.example.scrollview.otherActivity.DrawActivity;
 import com.example.scrollview.otherActivity.MusicActivity;
 import com.example.scrollview.otherActivity.VideoActivity;
@@ -39,11 +43,18 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
     ArrayList<Image> list = new ArrayList<>();
     String currentPhotoPath = "";
-
+    String l_id="";
+    Boolean needRefresh=false;
+    String myText="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent=getIntent();
+        l_id=intent.getStringExtra("l_id");
+        myText=intent.getStringExtra("myText");
+        setList();
+        needRefresh=true;
         initPhotoError();  //https://blog.csdn.net/weixin_42105630/article/details/86305354
         Button record = findViewById(R.id.record);
         Button btn1 = findViewById(R.id.btn1);
@@ -52,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         Button draw = findViewById(R.id.draw);
         Button local_m=findViewById(R.id.local_m);
         Button local_v=findViewById(R.id.local_v);
+        Button save=findViewById(R.id.save);
         record.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +124,18 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("audio/*"); //选择音频
                 startActivityForResult(intent, 4);
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("type",list.size()+"");
+                for(int i=0;i<list.size();i++){
+                    Log.v("type",list.get(i).getType()+"");
+                }
+                saveText(l_id);
+                saveImage(l_id);
+                finish();
             }
         });
         final ListView listView = findViewById(R.id.list_item);
@@ -298,13 +322,37 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i("tag", "saveBitmap success: " + filePic.getAbsolutePath());
     }
-
+    public void saveText(String l_id){
+        ListDB listDB=new ListDB(this);
+        EditText e1=findViewById(R.id.text);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String myText=e1.getText().toString();
+        listDB.UpdateText(l_id,myText,timeStamp);
+    }
+    public void saveImage(String l_id){
+        InforDB inforDB=new InforDB(this);
+        inforDB.DeleteSql(l_id);
+        if(!list.isEmpty()){
+            for(int i=0;i<list.size();i++){
+                inforDB.InsertSql(list.get(i),l_id);
+            }
+        }
+    }
+    public void setList(){
+        InforDB inforDB=new InforDB(this);
+        EditText editText=findViewById(R.id.text);
+        editText.setText(myText);
+        ArrayList<Image> i1=inforDB.getInf(l_id);
+        if(!i1.isEmpty()){
+            list.addAll(i1);
+        }
+        refresh_list();
+        Log.v("Tag",1+"");
+    }
     @Override
     protected void onResume() {
         super.onResume();
-        if (list == null) {
-
-        } else {
+        if (list != null&&needRefresh) {
             refresh_list();
         }
     }

@@ -68,11 +68,13 @@ public class ListDB {
     }
 
     //增加
-    public  void InsertUserSql(String myText, int star,String mytime) {
+    public  String InsertUserSql(String myText, int star,String mytime) {
         String sql = "insert into  list(l_id,myText,star,mytime) values(?,?,?,?)";
         //Gets the data repository in write mode*/
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.execSQL(sql, new String[]{GUID.getGUID(),myText,star+"",mytime});
+        String l_id=GUID.getGUID();
+        db.execSQL(sql, new String[]{l_id,myText,star+"",mytime});
+        return l_id;
     }
 
     //删除
@@ -83,12 +85,11 @@ public class ListDB {
         db.execSQL(sql, new String[]{strId});
     }
 
-    //更新单词
-    public void UpdateUseSql(List list) {
+    //更新
+    public void UpdateText(String l_id,String myText,String myTime) {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        String sql = "update list set mytime=?,myText=?,star=? where _id=?";
-        db.execSQL(sql, new String[]{list.getMytime(),list.getMyText(),list.getStar()+"",list.getL_id()});
+        String sql = "update list set mytime=?,myText=? where l_id=?";
+        db.execSQL(sql, new String[]{myTime,myText,l_id});
     }
-
 
 }
