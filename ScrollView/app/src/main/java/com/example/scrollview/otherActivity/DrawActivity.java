@@ -9,12 +9,15 @@ import android.graphics.Path;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,9 +33,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DrawActivity extends AppCompatActivity {
     LinkedList<Path> r=new LinkedList<Path>();
@@ -54,7 +60,13 @@ public class DrawActivity extends AppCompatActivity {
             c.setPath(path);
         }
 
+        ArrayList<Map<String,Object>> list=setColor();
+
+        SimpleAdapter simpleAdapter=new SimpleAdapter(DrawActivity.this,list,R.layout.item_color,new String[]{"color","pic"},new int[]{R.id.color_name,R.id.color_image});
+        Spinner spinner=findViewById(R.id.color);
+        spinner.setAdapter(simpleAdapter);
         Button blue=findViewById(R.id.blue);
+
         Button up=findViewById(R.id.size_up);
         ImageButton back=findViewById(R.id.back);
         ImageButton red=findViewById(R.id.red);
@@ -73,13 +85,6 @@ public class DrawActivity extends AppCompatActivity {
                 finish();
             }
 
-        });
-        blue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CustomView c=findViewById(R.id.Custom);
-                c.setColor(Color.BLUE);
-            }
         });
         red.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,6 +231,16 @@ public class DrawActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_draw, menu);
         return true;
     }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+
+        // Log.v(TAG, "WordItemFragment::onCreateContextMenu()");
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.contextmenu1, menu);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -241,5 +256,29 @@ public class DrawActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public ArrayList<Map<String,Object>> setColor(){
+        ArrayList<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+        Map<String,Object> a=new HashMap<>();
+        a.put("pic",R.drawable.shape_black);
+        a.put("color","black");
+        list.add(a);
+        Map<String,Object> a1=new HashMap<>();
+        a1.put("pic",R.drawable.shape_blue);
+        a1.put("color","blue");
+        list.add(a1);
+        Map<String,Object> a11=new HashMap<>();
+        a11.put("pic",R.drawable.shape_gree);
+        a11.put("color","gree");
+        list.add(a11);
+        Map<String,Object> a111=new HashMap<>();
+        a111.put("pic",R.drawable.shape_red);
+        a111.put("color","red");
+        list.add(a111);
+        Map<String,Object> a1111=new HashMap<>();
+        a1111.put("pic",R.drawable.shape_yellow);
+        a1111.put("color","yellow");
+        list.add(a1111);
+        return list;
     }
 }

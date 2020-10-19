@@ -47,55 +47,70 @@
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        >
+        android:layout_height="76dp"
+        android:background="#000000"
+        android:orientation="horizontal">
+
         <ImageButton
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
             android:id="@+id/back"
-            android:text="back"
-            android:src="@android:drawable/ic_media_rew"/>
-        <ImageButton
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_rew"
+            android:text="back" />
+
+        <ImageButton
             android:id="@+id/go"
-            android:text="go"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="-8dp"
+            android:layout_weight="1"
             android:src="@android:drawable/ic_media_ff"
-            android:layout_marginLeft="-8dp"/>
+            android:text="go" />
+
         <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
             android:id="@+id/size_down"
-            android:layout_marginLeft="-8dp"
-            android:text="down"/>
-        <ImageButton
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_marginLeft="-8dp"
+            android:layout_weight="1"
+            android:text="down" />
+
+        <ImageButton
             android:id="@+id/red"
-            android:text="red"
-            android:layout_marginLeft="-8dp"
-            android:src="@drawable/shape_red"/>
-        <ImageButton
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_marginLeft="-8dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/shape_red"
+            android:text="red" />
+
+        <Spinner
+            android:id="@+id/color"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"/>
+
+        <ImageButton
             android:id="@+id/Eraser"
-            android:text="Eraser"
-            android:layout_marginLeft="-8dp"
-            android:src="@android:drawable/radiobutton_off_background"/>
-        <ImageButton
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_marginLeft="-8dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/radiobutton_off_background"
+            android:text="Eraser" />
+
+        <ImageButton
             android:id="@+id/delete"
-            android:src="@android:drawable/ic_menu_delete"
-            android:layout_marginLeft="-8dp"/>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="-8dp"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_delete" />
     </LinearLayout>
 </LinearLayout>
