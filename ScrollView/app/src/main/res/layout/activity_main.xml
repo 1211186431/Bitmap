@@ -7,80 +7,92 @@
     tools:context=".MainActivity">
 
 
+    <LinearLayout
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123"
+            android:textSize="50sp" />
 
         <LinearLayout
-
-            android:layout_width="fill_parent"
-
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/text"
+            <Button
+                android:id="@+id/btn1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123"
-                android:textSize="50sp"/>
+                android:text="btn1" />
 
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <Button
-        android:id="@+id/btn1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="btn1" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/photo"
-        android:text="photo"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/record"
-        android:text="Record"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/video"
-        android:text="video"/>
-</LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/photo"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/draw"
-                    android:text="draw"/>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/local_m"
-                    android:text="local_m"/>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/local_v"
-                    android:text="local_v"/>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/save"
-                    android:text="保存"/>
-            </LinearLayout>
+                android:text="photo" />
 
-            <ListView
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/record"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/list_item"/>
+                android:text="Record" />
 
+            <Button
+                android:id="@+id/video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="video" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/draw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="draw" />
+
+            <Button
+                android:id="@+id/local_m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="local_m" />
+
+            <Button
+                android:id="@+id/local_v"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="local_v" />
+
+            <Button
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="保存" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ListView
+                android:id="@+id/list_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="7dp" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </LinearLayout>

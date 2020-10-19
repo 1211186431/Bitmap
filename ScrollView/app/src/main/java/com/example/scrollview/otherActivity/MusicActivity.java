@@ -1,19 +1,25 @@
 package com.example.scrollview.otherActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import com.example.scrollview.Image;
 import com.example.scrollview.MainActivity;
 import com.example.scrollview.R;
 
@@ -65,8 +71,18 @@ public class MusicActivity extends AppCompatActivity {
         Path = intent.getStringExtra("path2");
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         n=intent.getStringExtra("n");
-        Button back = findViewById(R.id.back);
-        Button delete = findViewById(R.id.delete);
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);      //此处箭头为系统的图标资源
+        //设置左上角导航键的点击监听事件
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mVideoView.stop();
+                finish();
+            }
+
+        });
         try {
             mVideoView = new MediaPlayer();
             mVideoView.setDataSource(Path);
@@ -105,17 +121,17 @@ public class MusicActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        final Button play = findViewById(R.id.video_play);
-        final Button replay = findViewById(R.id.video_Replay);
+        final ImageButton play = findViewById(R.id.video_play);
+        final ImageButton replay = findViewById(R.id.video_Replay);
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mVideoView.isPlaying()) {
                     mVideoView.pause();
-                    play.setText("Play");
+                    play.setImageResource(android.R.drawable.ic_media_play);
                 } else {
                     mVideoView.start();
-                    play.setText("Pause");
+                    play.setImageResource(android.R.drawable.ic_media_pause);
                 }
             }
         });
@@ -159,29 +175,46 @@ public class MusicActivity extends AppCompatActivity {
                 istouch = 1;
             }
         });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v("delete", n);
-                mVideoView.stop();
-                finish();
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mVideoView.stop();
-                Log.v("delete", n);
-                Intent intent =
-                        new Intent(MusicActivity.this, MainActivity.class);
-                intent.putExtra("delete_n", n);
-                setResult(111, intent);
-
-                finish();
-            }
-        });
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.delete) {
+            new android.app.AlertDialog.Builder(this).setTitle("delete").setMessage("是否真的删除?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Intent intent=
+                            new Intent(MusicActivity.this, MainActivity.class);
+                    intent.putExtra("delete_n",n);
+                    setResult(111,intent);
+                    Log.v("delete",n);
+                    finish();
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            }).create().show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     @Override
 
     protected void onDestroy() {

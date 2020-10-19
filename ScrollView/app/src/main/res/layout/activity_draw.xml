@@ -5,6 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myAppBar"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar" />
+    </com.google.android.material.appbar.AppBarLayout>
     <com.example.scrollview.otherActivity.CustomView
         android:layout_width="match_parent"
         android:layout_height="400dp"
@@ -17,11 +30,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/saveCustom"
-            android:text="save"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/blue"
             android:text="blue"/>
         <Button
@@ -29,45 +37,65 @@
             android:layout_height="wrap_content"
             android:id="@+id/size_up"
             android:text="up"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        >
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:id="@+id/back"
-            android:text="back"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/Eraser"
-            android:text="Eraser"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/red"
-            android:text="red"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/size_down"
-            android:text="down"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="back"
+            android:src="@android:drawable/ic_media_rew"/>
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:id="@+id/go"
-            android:text="go"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:text="go"
+            android:src="@android:drawable/ic_media_ff"
+            android:layout_marginLeft="-8dp"/>
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/size_down"
+            android:layout_marginLeft="-8dp"
+            android:text="down"/>
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/red"
+            android:text="red"
+            android:layout_marginLeft="-8dp"
+            android:src="@drawable/shape_red"/>
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/Eraser"
+            android:text="Eraser"
+            android:layout_marginLeft="-8dp"
+            android:src="@android:drawable/radiobutton_off_background"/>
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:id="@+id/delete"
-            android:text="delete"/>
+            android:src="@android:drawable/ic_menu_delete"
+            android:layout_marginLeft="-8dp"/>
     </LinearLayout>
 </LinearLayout>

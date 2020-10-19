@@ -6,24 +6,23 @@
     android:layout_height="match_parent"
     tools:context=".otherActivity.PhotoActivity"
     android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myAppBar"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:id="@+id/display"/>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/back"
-            android:text="back"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/delete"
-            android:text="delete"/>
-    </LinearLayout>
 
 </LinearLayout>

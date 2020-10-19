@@ -19,6 +19,8 @@ import com.example.scrollview.otherActivity.DrawActivity;
 import com.example.scrollview.otherActivity.MusicActivity;
 import com.example.scrollview.otherActivity.PhotoActivity;
 import com.example.scrollview.otherActivity.VideoActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,9 +57,16 @@ public class ListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        FloatingActionButton fab = findViewById(R.id.insert);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onclickinsert();
+            }
+        });
     }
 
-    public void onclickinsert(View view) {
+    public void onclickinsert() {
         ListDB listDB=new ListDB(this);
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String l_id=listDB.InsertUserSql("",-1,timeStamp);

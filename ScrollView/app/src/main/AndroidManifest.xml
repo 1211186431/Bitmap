@@ -21,11 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".otherActivity.VideoActivity" />
-        <activity android:name=".otherActivity.PhotoActivity" />
-        <activity android:name=".otherActivity.DrawActivity" />
-        <activity android:name=".otherActivity.MusicActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".otherActivity.VideoActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".otherActivity.PhotoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".otherActivity.DrawActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".otherActivity.MusicActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
     </application>
