@@ -23,18 +23,30 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="0ad2ac22-831e-4b7a-a6bb-b9e6d91797da">
+        <schema name="main" object-types="view, table" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="572da3cf-354c-4764-b82f-1afa200df0e1">
-      <console name="Connection 1" type="STANDARD" schema="" session="Main" />
+    <connection id="0ad2ac22-831e-4b7a-a6bb-b9e6d91797da">
+      <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="572da3cf-354c-4764-b82f-1afa200df0e1" />
+    <connection id="0ad2ac22-831e-4b7a-a6bb-b9e6d91797da" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="0ad2ac22-831e-4b7a-a6bb-b9e6d91797da" dataset="main.list" active-filter-id="7cee4f3e-ad61-414b-a6a1-ebd0179dea9d">
+      <filter id="7cee4f3e-ad61-414b-a6a1-ebd0179dea9d" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
+    <filter-actions connection-id="0ad2ac22-831e-4b7a-a6bb-b9e6d91797da" dataset="main.infor" active-filter-id="7c5ed7e8-d55e-4f0a-bead-0bc0723bb66f">
+      <filter id="7c5ed7e8-d55e-4f0a-bead-0bc0723bb66f" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -59,13 +71,13 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="572da3cf-354c-4764-b82f-1afa200df0e1" active="true">
+      <connection id="0ad2ac22-831e-4b7a-a6bb-b9e6d91797da" active="true">
         <database>
-          <name value="Connection 1" />
+          <name value="Connection" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-          <database-version value="9999.0" />
+          <database-version value="3.21" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />
@@ -74,7 +86,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="sqlite.db" schema="main" />
+            <file path="D:\mydb" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

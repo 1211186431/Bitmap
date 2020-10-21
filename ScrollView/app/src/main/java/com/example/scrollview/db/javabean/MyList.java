@@ -1,16 +1,18 @@
 package com.example.scrollview.db.javabean;
 
-public class List {
+public class MyList {
     String l_id;
     String myText;
     int star;
     String mytime;
+    String iTime;
 
-    public List(String l_id, String myText, int star, String mytime) {
+    public MyList(String l_id, String myText, int star, String mytime,String iTime) {
         this.l_id = l_id;
         this.myText = myText;
         this.star = star;
         this.mytime = mytime;
+        this.iTime=iTime;
     }
 
     public String getL_id() {

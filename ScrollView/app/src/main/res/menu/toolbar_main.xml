@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="add"
+        app:showAsAction="always" >
+        <menu>
+            <item
+                android:id="@+id/zhao_pian"
+                android:title="照片"/>
+            <item
+                android:id="@+id/lu_yin"
+                android:title="录音"/>
+            <item
+                android:id="@+id/tu_ya"
+                android:title="涂鸦"/>
+            <item
+                android:id="@+id/lu_xiang"
+                android:title="录像"/>
+            <item
+                android:id="@+id/fu_jian"
+                android:title="附件">
+                <menu>
+                    <item
+                        android:id="@+id/local_m"
+                        android:title="音乐"/>
+                    <item
+                        android:id="@+id/local_v"
+                        android:title="视频"/>
+                </menu>
+            </item>
+
+        </menu>
+    </item>
+    <item
+        android:id="@+id/photo"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:title="photo"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/detail"
+        android:title="详情"
+        app:showAsAction="never" />
+    <item
+        android:title="删除"
+        android:id="@+id/delete"
+        app:showAsAction="never"/>
+</menu>

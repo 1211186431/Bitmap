@@ -7,13 +7,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class ListDBHelper extends SQLiteOpenHelper  {
     private final static String DATABASE_NAME = "mydb";//数据库名字
-    private final static int DATABASE_VERSION = 1;  //等级 注意
+    private final static int DATABASE_VERSION = 2;  //等级 注意
 
     private final static String SQL_CREATE_DATABASE = "CREATE TABLE list (" +
             "  l_id  varchar(50) PRIMARY KEY, " +
             "  myText  varchar(300)," +
             "  star  int CHECK( star = 1 OR star = -1), " +
-            "  mytime  varchar(50) not null" +
+            "  mytime  varchar(50) not null," +
+            "  iTime varchar(50) not null"+
             ");";
     private final static String SQL_CREATE_DATABASE2 = "CREATE Table infor(" +
             "  i_id   varchar(50) PRIMARY Key," +

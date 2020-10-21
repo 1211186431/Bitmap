@@ -3,14 +3,11 @@ package com.example.scrollview.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.example.scrollview.GUID;
 import com.example.scrollview.db.javabean.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ListDB {
     private static final String TAG = "myTag";
@@ -26,7 +23,7 @@ public class ListDB {
 
 
     //得到全部单词列表
-    public ArrayList<Map<String, String>> getAlllist() {
+    public ArrayList<MyList> getAllList() {
         if (mDbHelper == null) {
             return null;
         }
@@ -36,7 +33,8 @@ public class ListDB {
                 "l_id",
                 "myText",
                 "star",
-                "mytime"
+                "mytime",
+                "iTime"
         };
 
         Cursor c = db.query(
@@ -53,27 +51,26 @@ public class ListDB {
     }
 
     //将游标转化
-    private ArrayList<Map<String, String>> ConvertCursor(Cursor cursor) {
-        ArrayList<Map<String, String>> result = new ArrayList<>();
+    private ArrayList<MyList> ConvertCursor(Cursor cursor) {
+        ArrayList<MyList> result = new ArrayList<>();
         while (cursor.moveToNext()) {
-            Map<String, String> map = new HashMap<>();
-            Log.v("Tag",cursor.getString(cursor.getColumnIndex("l_id")));
-            map.put("l_id", cursor.getString(cursor.getColumnIndex("l_id")));
-            map.put("myText", cursor.getString(cursor.getColumnIndex("myText")));
-            map.put("star", cursor.getInt(cursor.getColumnIndex("star"))+"");
-            map.put("mytime", cursor.getString(cursor.getColumnIndex("mytime")));
-            result.add(map);
+            MyList list=new MyList( cursor.getString(cursor.getColumnIndex("l_id")),
+                    cursor.getString(cursor.getColumnIndex("myText")),
+                    cursor.getInt(cursor.getColumnIndex("star")),
+                    cursor.getString(cursor.getColumnIndex("mytime")),
+                    cursor.getString(cursor.getColumnIndex("iTime")));
+            result.add(list);
         }
         return result;
     }
 
     //增加
     public  String InsertUserSql(String myText, int star,String mytime) {
-        String sql = "insert into  list(l_id,myText,star,mytime) values(?,?,?,?)";
+        String sql = "insert into  list(l_id,myText,star,mytime,iTime) values(?,?,?,?,?)";
         //Gets the data repository in write mode*/
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String l_id=GUID.getGUID();
-        db.execSQL(sql, new String[]{l_id,myText,star+"",mytime});
+        db.execSQL(sql, new String[]{l_id,myText,star+"",mytime,mytime});
         return l_id;
     }
 
@@ -90,6 +87,16 @@ public class ListDB {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String sql = "update list set mytime=?,myText=? where l_id=?";
         db.execSQL(sql, new String[]{myTime,myText,l_id});
+    }
+    public void insertStar(String l_id){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String sql = "update list set star=? where l_id=?";
+        db.execSQL(sql, new String[]{1+"",l_id});
+    }
+    public void deleteStar(String l_id){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String sql = "update list set star=? where l_id=?";
+        db.execSQL(sql, new String[]{-1+"",l_id});
     }
 
 }

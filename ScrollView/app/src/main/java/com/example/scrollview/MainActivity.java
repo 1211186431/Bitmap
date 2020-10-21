@@ -1,9 +1,11 @@
 package com.example.scrollview;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -15,6 +17,8 @@ import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -39,6 +43,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Image> list = new ArrayList<>();
@@ -55,89 +60,19 @@ public class MainActivity extends AppCompatActivity {
         myText=intent.getStringExtra("myText");
         setList();
         needRefresh=true;
-        initPhotoError();  //https://blog.csdn.net/weixin_42105630/article/details/86305354
-        Button record = findViewById(R.id.record);
-        Button btn1 = findViewById(R.id.btn1);
-        Button photo = findViewById(R.id.photo);
-        Button video = findViewById(R.id.video);
-        Button draw = findViewById(R.id.draw);
-        Button local_m=findViewById(R.id.local_m);
-        Button local_v=findViewById(R.id.local_v);
-        Button save=findViewById(R.id.save);
-        record.setOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(android.R.drawable.ic_menu_save);      //此处箭头为系统的图标资源
+        //设置左上角导航键的点击监听事件
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-                startActivityForResult(intent,4);
-            }
-        });
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intent.setType("image/*");//选择图片
-                startActivityForResult(intent, 1);
-            }
-        });
-        photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                try {
-                    File cache = createImageFile();
-                    Uri imageUri = Uri.fromFile(cache);
-                    //先创一个图片获取uri，在把照出来的存那
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    startActivityForResult(intent, 2);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-        video.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
-                startActivityForResult(intent, 3);
-            }
-        });
-        draw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, DrawActivity.class);
-                startActivityForResult(intent, 0);
-            }
-        });
-        local_v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
-                startActivityForResult(intent, 3);
-            }
-
-        });
-        local_m.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("audio/*"); //选择音频
-                startActivityForResult(intent, 4);
-            }
-        });
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v("type",list.size()+"");
-                for(int i=0;i<list.size();i++){
-                    Log.v("type",list.get(i).getType()+"");
-                }
-                saveText(l_id);
-                saveImage(l_id);
+                save();
                 finish();
             }
+
         });
+        initPhotoError();  //https://blog.csdn.net/weixin_42105630/article/details/86305354
         final ListView listView = findViewById(R.id.list_item);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -179,6 +114,65 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public  void photo(){
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        try {
+            File cache = createImageFile();
+            Uri imageUri = Uri.fromFile(cache);
+            //先创一个图片获取uri，在把照出来的存那
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            startActivityForResult(intent, 2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void photo1(){
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");//选择图片
+        startActivityForResult(intent, 1);
+    }
+    public void record(){
+        Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+        startActivityForResult(intent,4);
+    }
+    public void myDraw(){
+        Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+        startActivityForResult(intent, 0);
+    }
+    public void video(){
+        Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
+        startActivityForResult(intent, 3);
+    }
+    public void l_music(){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*"); //选择音频
+        startActivityForResult(intent, 4);
+    }
+    public void l_video(){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
+        startActivityForResult(intent, 3);
+    }
+    public void delete(){
+        new android.app.AlertDialog.Builder(this).setTitle("delete").setMessage("是否真的删除?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ListDB listDB=new ListDB(MainActivity.this);
+                InforDB inforDB=new InforDB(MainActivity.this);
+                inforDB.DeleteSql(l_id);
+                listDB.DeleteUseSql(l_id);
+                finish();
+            }
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        }).create().show();
+    }
+    public void detail(){
+        ListDB listDB=new ListDB(MainActivity.this);
     }
 
     @Override
@@ -257,7 +251,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_main, menu);
+        return true;
+    }
     private String getAudioFilePathFromUri(Uri uri) {
         Cursor cursor = getContentResolver()
                 .query(uri, null, null, null, null);
@@ -349,11 +348,45 @@ public class MainActivity extends AppCompatActivity {
         refresh_list();
         Log.v("Tag",1+"");
     }
+    public void save(){
+        Log.v("type",list.size()+"");
+        for(int i=0;i<list.size();i++){
+            Log.v("type",list.get(i).getType()+"");
+        }
+        saveText(l_id);
+        saveImage(l_id);
+        finish();
+    }
     @Override
     protected void onResume() {
         super.onResume();
         if (list != null&&needRefresh) {
             refresh_list();
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.zhao_pian:
+                photo1();break;
+            case R.id.photo:
+                photo();break;
+            case R.id.lu_yin:
+                record();break;
+            case R.id.lu_xiang:
+                video();break;
+            case R.id.tu_ya:
+                myDraw();break;
+            case R.id.delete:
+                delete();break;
+            case R.id.local_m:
+                l_music();break;
+            case R.id.local_v:
+                l_video();break;
+            default:break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

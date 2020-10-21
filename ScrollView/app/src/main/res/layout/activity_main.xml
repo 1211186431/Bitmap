@@ -5,81 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-
     <LinearLayout
 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/myAppBar"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        </com.google.android.material.appbar.AppBarLayout>
         <EditText
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="123"
             android:textSize="50sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="btn1" />
-
-            <Button
-                android:id="@+id/photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="photo" />
-
-            <Button
-                android:id="@+id/record"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Record" />
-
-            <Button
-                android:id="@+id/video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="video" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/draw"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="draw" />
-
-            <Button
-                android:id="@+id/local_m"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="local_m" />
-
-            <Button
-                android:id="@+id/local_v"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="local_v" />
-
-            <Button
-                android:id="@+id/save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="保存" />
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

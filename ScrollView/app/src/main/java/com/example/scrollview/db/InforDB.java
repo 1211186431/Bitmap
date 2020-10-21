@@ -4,14 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.scrollview.GUID;
 import com.example.scrollview.Image;
-import com.example.scrollview.db.javabean.List;
 import com.example.scrollview.db.javabean.Infor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class InforDB {
     private static final String TAG = "myTag";

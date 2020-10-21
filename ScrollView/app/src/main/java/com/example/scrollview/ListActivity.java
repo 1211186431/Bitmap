@@ -10,17 +10,15 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.example.scrollview.db.InforDB;
 import com.example.scrollview.db.ListDB;
-import com.example.scrollview.otherActivity.DrawActivity;
-import com.example.scrollview.otherActivity.MusicActivity;
-import com.example.scrollview.otherActivity.PhotoActivity;
-import com.example.scrollview.otherActivity.VideoActivity;
+import com.example.scrollview.db.javabean.MyList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,25 +27,25 @@ import java.util.Map;
 
 public class ListActivity extends AppCompatActivity {
     Boolean needRefresh=false;
+    Boolean isStar=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         ListDB listDB=new ListDB(this);
-        ArrayList<Map<String, String>> items = listDB.getAlllist();
-        SimpleAdapter adapter = new SimpleAdapter(ListActivity.this, items, R.layout.item_list,
-                new String[]{"l_id","myText"},
-                new int[]{R.id.textId, R.id.textViewWord});
+        ArrayList<MyList> items = listDB.getAllList();
+        ListAdapter listAdapter=new ListAdapter(items,ListActivity.this);
         needRefresh=true;
         ListView list = (ListView)findViewById(R.id.list);
         registerForContextMenu(list);
-        list.setAdapter(adapter);
+        list.setAdapter(listAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 TextView txtId=view.findViewById(R.id.textId);
-                TextView t2=view.findViewById(R.id.textViewWord);
+                TextView t2=view.findViewById(R.id.mytext);
                 String id=txtId.getText().toString();
+                ListDB  listDB1=new ListDB(ListActivity.this);
                 String myText=t2.getText().toString();
                 Intent intent=
                         new Intent(ListActivity.this,MainActivity.class);  //没有直接传回去，传sheet。直接传有问题
@@ -95,10 +93,26 @@ public class ListActivity extends AppCompatActivity {
             case R.id.action_delete:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                 itemView = info.targetView;
-                //删除单词
                 textId = (TextView) itemView.findViewById(R.id.textId);
                 if (textId != null) {
                     onDeleteDialog(textId.getText().toString());
+                }
+                break;
+            case  R.id.star:
+                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                itemView = info.targetView;
+                ImageView imageView=itemView.findViewById(R.id.starP);
+                ListDB listDB=new ListDB(ListActivity.this);
+                textId = (TextView) itemView.findViewById(R.id.textId);
+                if(!isStar){
+                    imageView.setImageResource(android.R.drawable.star_big_on);
+                    listDB.insertStar(textId.getText().toString());
+                    isStar=true;
+                }
+                else {
+                    imageView.setImageBitmap(null);
+                    listDB.deleteStar(textId.getText().toString());
+                    isStar=false;
                 }
                 break;
             default:break;
@@ -110,6 +124,8 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 ListDB listDB=new ListDB(ListActivity.this);
+                InforDB inforDB=new InforDB(ListActivity.this);
+                inforDB.DeleteSql(strId);
                 listDB.DeleteUseSql(strId);
                 refreshList(listDB);
             }
@@ -121,12 +137,10 @@ public class ListActivity extends AppCompatActivity {
         }).create().show();
     }
     public void refreshList(ListDB listDB){  //刷新界面
-        ListView list = findViewById(R.id.list);
-        ArrayList<Map<String, String>> items = listDB.getAlllist();
-        SimpleAdapter adapter = new SimpleAdapter(this, items, R.layout.item_list,
-                new String[]{"l_id", "myText"},
-                new int[]{R.id.textId, R.id.textViewWord});
-        list.setAdapter(adapter);
+        ListView list = (ListView)findViewById(R.id.list);
+        ArrayList<MyList> items = listDB.getAllList();
+        ListAdapter listAdapter=new ListAdapter(items,ListActivity.this);
+        list.setAdapter(listAdapter);
     }
     @Override
     protected void onResume() {

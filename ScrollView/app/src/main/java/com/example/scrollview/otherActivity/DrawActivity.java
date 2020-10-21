@@ -13,11 +13,13 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +47,7 @@ public class DrawActivity extends AppCompatActivity {
     LinkedList<Integer> rcolor=new LinkedList<Integer>();
     LinkedList<Integer> rsize=new LinkedList<Integer>();
     String n="";
+    int PColor=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,18 +64,42 @@ public class DrawActivity extends AppCompatActivity {
         }
 
         ArrayList<Map<String,Object>> list=setColor();
-
         SimpleAdapter simpleAdapter=new SimpleAdapter(DrawActivity.this,list,R.layout.item_color,new String[]{"color","pic"},new int[]{R.id.color_name,R.id.color_image});
         Spinner spinner=findViewById(R.id.color);
         spinner.setAdapter(simpleAdapter);
-        Button blue=findViewById(R.id.blue);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                TextView t=view.findViewById(R.id.color_name);
+                setPColor(t.getText().toString());
+            }
 
-        Button up=findViewById(R.id.size_up);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callbac
+            }
+        });
+        ArrayList<Map<String,Object>> list_size=setSize();
+        SimpleAdapter simpleAdapter2=new SimpleAdapter(DrawActivity.this,list_size,R.layout.item_size,new String[]{"color","pic"},new int[]{R.id.color_name,R.id.color_image});
+        Spinner spinner_size=findViewById(R.id.size);
+        spinner_size.setAdapter(simpleAdapter2);
+        spinner_size.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                TextView t=view.findViewById(R.id.color_name);
+                setPSize(t.getText().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Another interface callbac
+            }
+        });
         ImageButton back=findViewById(R.id.back);
-        ImageButton red=findViewById(R.id.red);
-        Button down=findViewById(R.id.size_down);
         ImageButton go=findViewById(R.id.go);
-        ImageButton eraser=findViewById(R.id.Eraser);
+        final Button eraser=findViewById(R.id.Eraser);
         ImageButton delete=findViewById(R.id.delete);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,27 +112,6 @@ public class DrawActivity extends AppCompatActivity {
                 finish();
             }
 
-        });
-        red.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomView c=findViewById(R.id.Custom);
-                c.setColor(Color.RED);
-            }
-        });
-        up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CustomView c=findViewById(R.id.Custom);
-                c.setSize(10);
-            }
-        });
-        down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomView c=findViewById(R.id.Custom);
-                c.setSize(5);
-            }
         });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,7 +149,19 @@ public class DrawActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CustomView c=findViewById(R.id.Custom);
-                c.setColor(Color.WHITE);
+                String e_text=eraser.getText().toString();
+                switch (e_text){
+                    case "画笔":
+                        c.setColor(PColor);
+                        eraser.setText("橡皮");
+                        break;
+                    case "橡皮":
+                        c.setColor(Color.WHITE);
+                        eraser.setText("画笔");
+                        break;
+                    default:break;
+                }
+
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
@@ -257,6 +275,8 @@ public class DrawActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //初始化颜色下拉列表
     public ArrayList<Map<String,Object>> setColor(){
         ArrayList<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
         Map<String,Object> a=new HashMap<>();
@@ -280,5 +300,58 @@ public class DrawActivity extends AppCompatActivity {
         a1111.put("color","yellow");
         list.add(a1111);
         return list;
+    }
+
+    //初始化大小下拉列表
+    public ArrayList<Map<String,Object>> setSize(){
+        ArrayList<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+        Map<String,Object> a=new HashMap<>();
+        a.put("pic",R.drawable.size_5);
+        a.put("color","black");
+        list.add(a);
+        Map<String,Object> a1=new HashMap<>();
+        a1.put("pic",R.drawable.size_10);
+        a1.put("color","blue");
+        list.add(a1);
+        Map<String,Object> a11=new HashMap<>();
+        a11.put("pic",R.drawable.size_15);
+        a11.put("color","red");
+        list.add(a11);
+        return list;
+    }
+    public void setPSize(String color){
+        CustomView c=findViewById(R.id.Custom);
+        switch (color){
+            case "red":
+                c.setSize(15);break;
+            case "black":
+                c.setSize(5);break;
+            case "blue":
+                c.setSize(10);break;
+            default:
+                break;
+        }
+    }
+    public void setPColor(String color){
+        CustomView c=findViewById(R.id.Custom);
+        switch (color){
+            case "red":
+                PColor=Color.RED;
+                c.setColor(Color.RED);break;
+            case "black":
+                PColor=Color.BLACK;
+                c.setColor(Color.BLACK);break;
+            case "gree":
+                PColor=Color.GREEN;
+                c.setColor(Color.GREEN);break;
+            case "yellow":
+                PColor=Color.YELLOW;
+                c.setColor(Color.YELLOW);break;
+            case "blue":
+                PColor=Color.BLUE;
+                c.setColor(Color.BLUE);break;
+            default:
+                break;
+        }
     }
 }
