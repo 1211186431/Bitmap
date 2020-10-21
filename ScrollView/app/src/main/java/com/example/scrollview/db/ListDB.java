@@ -8,6 +8,7 @@ import com.example.scrollview.GUID;
 import com.example.scrollview.db.javabean.*;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ListDB {
     private static final String TAG = "myTag";
@@ -22,7 +23,7 @@ public class ListDB {
     }
 
 
-    //得到全部单词列表
+    //得到
     public ArrayList<MyList> getAllList() {
         if (mDbHelper == null) {
             return null;
@@ -44,12 +45,39 @@ public class ListDB {
                 null,                            // The values for the WHERE clause
                 null,                                     // don't group the rows
                 null,                                     // don't filter by row groups
-                null                                 // The sort order
+                "star DESC,mytime DESC"                                // The sort order
         );
 
         return ConvertCursor(c);
     }
+    //得到
+    public ArrayList<MyList> getList(String l_id) {
+        if (mDbHelper == null) {
+            return null;
+        }
 
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = {
+                "l_id",
+                "myText",
+                "star",
+                "mytime",
+                "iTime"
+        };
+        String where = "l_id = ?";
+        String[] params = {l_id};
+        Cursor c = db.query(
+                "list",  // The table to query
+                projection,                               // The columns to return
+                where,                                // The columns for the WHERE clause
+                params,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                // The sort order
+        );
+
+        return ConvertCursor(c);
+    }
     //将游标转化
     private ArrayList<MyList> ConvertCursor(Cursor cursor) {
         ArrayList<MyList> result = new ArrayList<>();
@@ -97,6 +125,13 @@ public class ListDB {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String sql = "update list set star=? where l_id=?";
         db.execSQL(sql, new String[]{-1+"",l_id});
+    }
+    //查找
+    public ArrayList<MyList> SearchUseSql(String strSearch) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String sql = "select * from list where myText like ? order by myText desc";
+        Cursor c = db.rawQuery(sql, new String[]{"%" + strSearch + "%"});
+        return ConvertCursor(c);
     }
 
 }

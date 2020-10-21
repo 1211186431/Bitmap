@@ -1,5 +1,6 @@
 package com.example.scrollview;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -17,6 +18,7 @@ import android.os.StrictMode;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +26,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.scrollview.db.InforDB;
 import com.example.scrollview.db.ListDB;
 import com.example.scrollview.db.javabean.Infor;
+import com.example.scrollview.db.javabean.MyList;
 import com.example.scrollview.otherActivity.DrawActivity;
 import com.example.scrollview.otherActivity.MusicActivity;
 import com.example.scrollview.otherActivity.VideoActivity;
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=getIntent();
         l_id=intent.getStringExtra("l_id");
         myText=intent.getStringExtra("myText");
-        setList();
+        setInfor();
         needRefresh=true;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -173,6 +177,30 @@ public class MainActivity extends AppCompatActivity {
     }
     public void detail(){
         ListDB listDB=new ListDB(MainActivity.this);
+        ArrayList<MyList> myLists=listDB.getList(l_id);
+        MyList myList;
+        if(!myLists.isEmpty()){
+            myList=myLists.get(0);
+            final String myTime=myList.getMytime();
+            final String iTime=myList.getiTime();
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            final View viewDialog = LayoutInflater.from(this).inflate(R.layout.detail, null, false);
+            TextView lastTime=viewDialog.findViewById(R.id.lastTime);
+            TextView insertTime=viewDialog.findViewById(R.id.insertTime);
+            lastTime.setText(myTime);
+            insertTime.setText(iTime);
+            builder.setTitle("详细信息")
+                    .setView(viewDialog)
+                    .setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+            builder.create().show();
+        }
+
     }
 
     @Override
@@ -324,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
     public void saveText(String l_id){
         ListDB listDB=new ListDB(this);
         EditText e1=findViewById(R.id.text);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(new Date());
         String myText=e1.getText().toString();
         listDB.UpdateText(l_id,myText,timeStamp);
     }
@@ -337,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public void setList(){
+    public void setInfor(){
         InforDB inforDB=new InforDB(this);
         EditText editText=findViewById(R.id.text);
         editText.setText(myText);
@@ -384,9 +412,16 @@ public class MainActivity extends AppCompatActivity {
                 l_music();break;
             case R.id.local_v:
                 l_video();break;
+            case R.id.detail:
+                detail();break;
             default:break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onchicksearch(View view) {
+        SearchView searchView=findViewById(R.id.search);
+
     }
 }

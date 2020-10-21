@@ -55,6 +55,11 @@ public class DrawActivity extends AppCompatActivity {
         Intent intent=getIntent();
         CustomView c=findViewById(R.id.Custom);
         n=intent.getStringExtra("n");
+        ImageButton back=findViewById(R.id.back);
+        ImageButton go=findViewById(R.id.go);
+        final Button eraser=findViewById(R.id.Eraser);
+        ImageButton delete=findViewById(R.id.delete);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         final String path=intent.getStringExtra("path4");
         if(path==null){
 
@@ -97,11 +102,7 @@ public class DrawActivity extends AppCompatActivity {
                 // Another interface callbac
             }
         });
-        ImageButton back=findViewById(R.id.back);
-        ImageButton go=findViewById(R.id.go);
-        final Button eraser=findViewById(R.id.Eraser);
-        ImageButton delete=findViewById(R.id.delete);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_save);      //此处箭头为系统的图标资源
         //设置左上角导航键的点击监听事件
@@ -167,23 +168,26 @@ public class DrawActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new android.app.AlertDialog.Builder(DrawActivity.this).setTitle("delete").setMessage("是否真的删除?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent=
-                                new Intent(DrawActivity.this, MainActivity.class);
-                        intent.putExtra("delete_n",n);
-                        setResult(111,intent);
-                        Log.v("delete",n);
-                        finish();
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                if (path != null) {
+                    new android.app.AlertDialog.Builder(DrawActivity.this).setTitle("delete").setMessage("是否真的删除?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent=
+                                    new Intent(DrawActivity.this, MainActivity.class);
+                            intent.putExtra("delete_n",n);
+                            setResult(111,intent);
+                            Log.v("delete",n);
+                            finish();
+                        }
+                    }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                    }
-                }).create().show();
-
+                        }
+                    }).create().show();
+                }
+                else
+                    finish();
             }
         });
     }

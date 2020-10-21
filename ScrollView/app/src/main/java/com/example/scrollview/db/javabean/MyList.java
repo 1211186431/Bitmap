@@ -15,6 +15,14 @@ public class MyList {
         this.iTime=iTime;
     }
 
+    public String getiTime() {
+        return iTime;
+    }
+
+    public void setiTime(String iTime) {
+        this.iTime = iTime;
+    }
+
     public String getL_id() {
         return l_id;
     }

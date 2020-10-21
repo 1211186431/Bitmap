@@ -42,7 +42,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@android:drawable/ic_media_rew"
-                android:text="back" />
+                android:text="back"
+                android:background="@null"/>
 
             <ImageButton
                 android:id="@+id/go"
@@ -51,7 +52,8 @@
                 android:layout_marginLeft="-8dp"
                 android:layout_weight="1"
                 android:src="@android:drawable/ic_media_ff"
-                android:text="go" />
+                android:text="go"
+                android:background="@null"/>
 
             <Spinner
                 android:id="@+id/size"
@@ -74,7 +76,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="-8dp"
                 android:layout_weight="1"
-                android:text="橡皮" />
+                android:text="橡皮"
+                android:background="@null"/>
 
             <ImageButton
                 android:id="@+id/delete"
@@ -82,7 +85,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="-8dp"
                 android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_delete" />
+                android:src="@android:drawable/ic_menu_delete"
+                android:background="@null"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

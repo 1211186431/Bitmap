@@ -71,7 +71,7 @@ public class MusicActivity extends AppCompatActivity {
         Path = intent.getStringExtra("path2");
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         n=intent.getStringExtra("n");
-        Toolbar toolbar = findViewById(R.id.toolbar2);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);      //此处箭头为系统的图标资源
         //设置左上角导航键的点击监听事件
@@ -122,7 +122,6 @@ public class MusicActivity extends AppCompatActivity {
         }
 
         final ImageButton play = findViewById(R.id.video_play);
-        final ImageButton replay = findViewById(R.id.video_Replay);
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,12 +132,6 @@ public class MusicActivity extends AppCompatActivity {
                     mVideoView.start();
                     play.setImageResource(android.R.drawable.ic_media_pause);
                 }
-            }
-        });
-        replay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

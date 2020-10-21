@@ -1,23 +1,29 @@
 package com.example.scrollview;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.scrollview.db.InforDB;
 import com.example.scrollview.db.ListDB;
 import com.example.scrollview.db.javabean.MyList;
+import com.example.scrollview.otherActivity.MusicActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +34,7 @@ import java.util.Map;
 public class ListActivity extends AppCompatActivity {
     Boolean needRefresh=false;
     Boolean isStar=false;
+    SearchView mSearchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +45,8 @@ public class ListActivity extends AppCompatActivity {
         needRefresh=true;
         ListView list = (ListView)findViewById(R.id.list);
         registerForContextMenu(list);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         list.setAdapter(listAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -48,7 +57,7 @@ public class ListActivity extends AppCompatActivity {
                 ListDB  listDB1=new ListDB(ListActivity.this);
                 String myText=t2.getText().toString();
                 Intent intent=
-                        new Intent(ListActivity.this,MainActivity.class);  //没有直接传回去，传sheet。直接传有问题
+                        new Intent(ListActivity.this,MainActivity.class);
                 intent.putExtra("l_id",id);
                 intent.putExtra("myText",myText);
                 Log.v("Tag","1+"+id);
@@ -62,11 +71,13 @@ public class ListActivity extends AppCompatActivity {
                 onclickinsert();
             }
         });
+
+
     }
 
     public void onclickinsert() {
         ListDB listDB=new ListDB(this);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(new Date());
         String l_id=listDB.InsertUserSql("",-1,timeStamp);
         Intent intent=new Intent(ListActivity.this,MainActivity.class);
         intent.putExtra("l_id",l_id);
@@ -148,5 +159,52 @@ public class ListActivity extends AppCompatActivity {
         if (needRefresh) {
             refreshList(new ListDB(this));
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_list, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        mSearchView = (SearchView) searchItem.getActionView();
+        //设置该SearchView显示搜索按钮
+        mSearchView.setSubmitButtonEnabled(true);
+        //设置默认提示文字
+        mSearchView.setQueryHint("输入您想查找的内容");
+        //配置监听器
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            //点击搜索按钮时触发
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //此处添加查询开始后的具体时间和方法
+                ListDB listDB=new ListDB(ListActivity.this);
+                ListView list = (ListView)findViewById(R.id.list);
+                ArrayList<MyList> items = listDB.SearchUseSql(query);
+                ListAdapter listAdapter=new ListAdapter(items,ListActivity.this);
+                list.setAdapter(listAdapter);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //如果newText长度不为0
+                if (TextUtils.isEmpty(newText)){
+                    refreshList(new ListDB(ListActivity.this));
+                }else{
+                    ListDB listDB=new ListDB(ListActivity.this);
+                    ListView list = (ListView)findViewById(R.id.list);
+                    ArrayList<MyList> items = listDB.SearchUseSql(newText);
+                    ListAdapter listAdapter=new ListAdapter(items,ListActivity.this);
+                    list.setAdapter(listAdapter);
+                }
+                return true;
+
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
     }
 }
