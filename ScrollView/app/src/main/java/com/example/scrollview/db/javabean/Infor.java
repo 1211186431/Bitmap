@@ -13,35 +13,4 @@ public class Infor {
         this.l_id = l_id;
     }
 
-    public String getI_id() {
-        return i_id;
-    }
-
-    public void setI_id(String i_id) {
-        this.i_id = i_id;
-    }
-
-    public String getMypath() {
-        return mypath;
-    }
-
-    public void setMypath(String mypath) {
-        this.mypath = mypath;
-    }
-
-    public int getMytype() {
-        return mytype;
-    }
-
-    public void setMytype(int mytype) {
-        this.mytype = mytype;
-    }
-
-    public String getL_id() {
-        return l_id;
-    }
-
-    public void setL_id(String l_id) {
-        this.l_id = l_id;
-    }
 }

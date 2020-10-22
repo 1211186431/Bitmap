@@ -1,5 +1,6 @@
 package com.example.scrollview.otherActivity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -10,16 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.VideoView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.scrollview.Image;
 import com.example.scrollview.MainActivity;
 import com.example.scrollview.R;
 
@@ -50,7 +47,7 @@ public class MusicActivity extends AppCompatActivity {
                         seekBar.setProgress(position * max / time);
 
                         double n = ((double) position) / 1000;
-                        String n2 = String.format("%.2f", n);
+                        @SuppressLint("DefaultLocale") String n2 = String.format("%.2f", n);
                         String time2 = String.format("%.2f", ((double) time) / 1000);
                         TextView t = (TextView) findViewById(R.id.time2);
                         t.setText(n2 + "s / " + time2 + "s");
@@ -68,9 +65,10 @@ public class MusicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         Intent intent = getIntent();
-        Path = intent.getStringExtra("path2");
-        seekBar = (SeekBar) findViewById(R.id.seekbar);
+        Path = intent.getStringExtra("path_music");
+        seekBar = findViewById(R.id.seekbar);
         n=intent.getStringExtra("n");
+        Log.v("music","music");
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);      //此处箭头为系统的图标资源
@@ -135,6 +133,7 @@ public class MusicActivity extends AppCompatActivity {
             }
         });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // 当拖动条的滑块位置发生改变时触发该方法,在这里直接使用参数progress，即当前滑块代表的进度值
@@ -143,8 +142,8 @@ public class MusicActivity extends AppCompatActivity {
                 double time = mVideoView.getDuration();
                 double max = seekBar.getMax();
                 double n = (time * dest / max) / 1000;
-                String n2 = String.format("%.2f", n);
-                String time2 = String.format("%.2f", time / 1000);
+                @SuppressLint("DefaultLocale") String n2 = String.format("%.2f", n);
+                @SuppressLint("DefaultLocale") String time2 = String.format("%.2f", time / 1000);
                 TextView t = (TextView) findViewById(R.id.time2);
                 t.setText(n2 + "s / " + time2 + "s");
 

@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -26,6 +27,7 @@ import com.example.scrollview.db.javabean.MyList;
 import com.example.scrollview.otherActivity.MusicActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -136,6 +138,7 @@ public class ListActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 ListDB listDB=new ListDB(ListActivity.this);
                 InforDB inforDB=new InforDB(ListActivity.this);
+                listDeleteFile(strId);   //删除文件
                 inforDB.DeleteSql(strId);
                 listDB.DeleteUseSql(strId);
                 refreshList(listDB);
@@ -146,6 +149,19 @@ public class ListActivity extends AppCompatActivity {
 
             }
         }).create().show();
+    }
+    public void listDeleteFile(String l_id){//删除时删除存的照片
+        InforDB inforDB=new InforDB(this);
+        ArrayList<Image> list=inforDB.getInf(l_id);
+        for(int t=0;t<list.size();t++){
+            if(list.get(t).getType()==1||list.get(t).getType()==4){
+                String deletePath=list.get(t).getPath();
+                File file=new File(deletePath);  //删除时把文件删了
+                if (file.isFile()) {
+                    file.delete();
+                }
+            }
+        }
     }
     public void refreshList(ListDB listDB){  //刷新界面
         ListView list = (ListView)findViewById(R.id.list);

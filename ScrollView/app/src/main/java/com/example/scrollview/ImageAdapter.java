@@ -60,14 +60,14 @@ public class ImageAdapter extends BaseAdapter {
                 String path=mData.get(position).getPath();
                 FileInputStream fs = null;
                 File f = new File(path);
-                // 加载本地图片
-                Glide.with(convertView.getContext()).load(f).placeholder(R.drawable.ic_launcher_background).into(image);//教材499 https://www.jianshu.com/p/791ee473a89b
+                // 加载本地图片  加载重复的图片显示不出来还是老图片，但打开没问题。应该是地址一样的问题与缓存算法有关
+               Glide.with(convertView.getContext()).load(f).into(image);//教材499 https://www.jianshu.com/p/791ee473a89b
                 id.setText(mData.get(position).getId());
 //                try {
 //                    fs = new FileInputStream(f);
 //                    Bitmap bitmap = BitmapFactory.decodeStream(fs);
 //                    image.setImageBitmap(bitmap);  //用存的bitmap显示，不好更新
-
+//
 //                } catch (FileNotFoundException e) {
 //                    e.printStackTrace();
 //                }

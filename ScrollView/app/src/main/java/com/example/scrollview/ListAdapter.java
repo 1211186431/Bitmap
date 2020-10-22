@@ -56,8 +56,13 @@ public class ListAdapter extends BaseAdapter {
                 String s=list.getMyText().substring(0,12);
                 title.setText(s+"...");
             }
-            else
-                title.setText(list.getMyText());
+            else{
+                if(list.getMyText().equals(""))
+                    title.setText("无标题");
+                else
+                    title.setText(list.getMyText());
+            }
+
             myText.setText(list.getMyText());
             if(list.getStar()>0)
                 imageView.setImageResource(android.R.drawable.star_big_on);

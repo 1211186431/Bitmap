@@ -3,11 +3,15 @@ package com.example.scrollview;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         needRefresh=true;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(android.R.drawable.ic_menu_save);      //此处箭头为系统的图标资源
+        toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);      //此处箭头为系统的图标资源
         //设置左上角导航键的点击监听事件
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
                                 startActivityForResult(intent, 0);
                                 break;
                             case 2:
-                                Intent intent2 = new Intent(MainActivity.this, MusicActivity.class);
-                                intent2.putExtra("path2", list.get(n).getPath()); //忘初始化path了
+                                Intent intent2 = new Intent(MainActivity.this,MusicActivity.class);
+                                intent2.putExtra("path_music", list.get(n).getPath()); //忘初始化path了
                                 intent2.putExtra("n",n+"");
                                 startActivityForResult(intent2, 0);
                                 break;
@@ -149,14 +153,31 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 3);
     }
     public void l_music(){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("audio/*"); //选择音频
-        startActivityForResult(intent, 4);
+        int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("audio/*"); //选择音频
+            startActivityForResult(intent, 4);
+        }else{
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
+        }
+
     }
     public void l_video(){
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
-        startActivityForResult(intent, 3);
+        //使用兼容库就无需判断系统版本
+        int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
+            //拥有权限，执行操作
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
+            startActivityForResult(intent, 3);
+        }else{
+            //没有权限，向用户请求权限
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        }
+
+
+
     }
     public void delete(){
         new android.app.AlertDialog.Builder(this).setTitle("delete").setMessage("是否真的删除?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -164,6 +185,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 ListDB listDB=new ListDB(MainActivity.this);
                 InforDB inforDB=new InforDB(MainActivity.this);
+                for(int t=0;t<list.size();t++){
+                    if(list.get(t).getType()==1||list.get(t).getType()==4){
+                        String deletePath=list.get(t).getPath();
+                        File file=new File(deletePath);  //删除时把文件删了
+                        if (file.isFile()) {
+                            file.delete();
+                        }
+                    }
+                }
                 inforDB.DeleteSql(l_id);
                 listDB.DeleteUseSql(l_id);
                 finish();
@@ -219,50 +249,36 @@ public class MainActivity extends AppCompatActivity {
                         String imageFileName = "JPEG_" + timeStamp + ".jpg";
                         String filePath = getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/" + imageFileName;
                         saveBitmap(bitmap, filePath);
-                        list.add(new Image(filePath, 1));
+                        Image image1=new Image(filePath, 1);
+                        list.add(image1);
                     } catch (FileNotFoundException e) {
                         Log.e("Exception", e.getMessage(), e);
                     }
                     break;
                 case 2:   //拍照不用获取uri，会有问题
-                    FileInputStream fs = null;
-                    try {
-                        File f = new File(currentPhotoPath);
-                        fs = new FileInputStream(f);
-                        Bitmap bitmap = BitmapFactory.decodeStream(fs);
-                        list.add(new Image(currentPhotoPath, 1));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    Image image2=new Image(currentPhotoPath, 1);
+                    list.add(image2);
                     break;
                 case 3:   //视频
                     Uri uri2 = data.getData();
                     String filePath = getAudioFilePathFromUri(uri2);
-                    Log.v("path", filePath);
-                    list.add(new Image(filePath, 3));
+                    Image image3=new Image(filePath, 3);
+                    list.add(image3);
                     break;
                 case 4:  //音频
                     Uri uri3 = data.getData();
                     String filePath2 = getAudioFilePathFromUri(uri3);
-                    Log.v("path", filePath2);
-                    list.add(new Image(filePath2, 2));
+                    Image image4=new Image(filePath2, 2);
+                    list.add(image4);
                 default:
                     break;
             }
         }
-        if (requestCode == 0) {
+        if (requestCode == 0) {  //画图返回
             switch (resultCode){
                 case 11:
-                    FileInputStream fs = null;
-                    File f = new File(data.getStringExtra("path"));
-                    //      Log.v("path",data.getStringExtra("path"));
-                    try {
-                        fs = new FileInputStream(f);
-                        Bitmap bitmap = BitmapFactory.decodeStream(fs);
-                        list.add(new Image(data.getStringExtra("path"), 4));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    Image image=new Image(data.getStringExtra("path"), 4);
+                    list.add(image);
                     break;
                 case 12:
                     int n=Integer.parseInt(data.getStringExtra("change_n"));
@@ -275,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(resultCode==111){  //所有返回后删除
            int n=Integer.parseInt(data.getStringExtra("delete_n"));
+           Log.v("myTag",list.get(n).getId());
             list.remove(n);
         }
 
@@ -349,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i("tag", "saveBitmap success: " + filePic.getAbsolutePath());
     }
-    public void saveText(String l_id){
+    public void saveText(String l_id){  //存文字
         ListDB listDB=new ListDB(this);
         EditText e1=findViewById(R.id.text);
         String timeStamp = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(new Date());
@@ -365,6 +382,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    public void deleteImage(int n){
+        InforDB inforDB=new InforDB(this);
+        Image dImage=list.get(n);
+        list.remove(n);
+        Log.v("myTag",dImage.getId());
+        inforDB.DeleteOne(dImage.getId());
+        inforDB.close();
+    }
+
     public void setInfor(){
         InforDB inforDB=new InforDB(this);
         EditText editText=findViewById(R.id.text);
@@ -374,16 +400,6 @@ public class MainActivity extends AppCompatActivity {
             list.addAll(i1);
         }
         refresh_list();
-        Log.v("Tag",1+"");
-    }
-    public void save(){
-        Log.v("type",list.size()+"");
-        for(int i=0;i<list.size();i++){
-            Log.v("type",list.get(i).getType()+"");
-        }
-        saveText(l_id);
-        saveImage(l_id);
-        finish();
     }
     @Override
     protected void onResume() {
@@ -420,8 +436,44 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onchicksearch(View view) {
-        SearchView searchView=findViewById(R.id.search);
-
+    //权限设置是返回   https://www.jianshu.com/p/ccea3c2f9cfa
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //通过requestCode来识别是否同一个请求
+        if (requestCode == 1){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                //用户同意，执行操作
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("video/*"); //选择视频 （mp4 3gp 是android支持的视频格式）
+                startActivityForResult(intent, 3);
+            }else{
+                //用户不同意，向用户展示该权限作用
+                Toast.makeText(MainActivity.this,"没有权限",Toast.LENGTH_LONG).show();
+            }
+        }
+        if (requestCode == 2){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("audio/*"); //选择音频
+                startActivityForResult(intent, 4);
+            }else{
+                //用户不同意，向用户展示该权限作用
+                Toast.makeText(MainActivity.this,"没有权限",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+    public void save(){
+        Log.v("type",list.size()+"");
+        for(int i=0;i<list.size();i++){
+            Log.v("type",list.get(i).getType()+"");
+        }
+        saveText(l_id);
+        saveImage(l_id);
+        finish();
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.v("stop","stop");
     }
 }

@@ -9,11 +9,13 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:label="随手记"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListActivity"
+        <activity
+            android:name=".ListActivity"
             android:label="随手记"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,23 +24,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".otherActivity.VideoActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="视频"/>
-        <activity android:name=".otherActivity.PhotoActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="图片"/>
-        <activity android:name=".otherActivity.DrawActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="涂鸦"/>
-        <activity android:name=".otherActivity.MusicActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="音乐"/>
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="">
-
-        </activity>
+        <activity
+            android:name=".otherActivity.VideoActivity"
+            android:label="视频"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".otherActivity.PhotoActivity"
+            android:label="图片"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".otherActivity.DrawActivity"
+            android:label="涂鸦"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".otherActivity.MusicActivity"
+            android:label="音乐"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

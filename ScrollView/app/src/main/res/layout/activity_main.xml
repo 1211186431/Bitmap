@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:text=""
+            android:hint="点击输入内容"
             android:textSize="20sp" />
     </ScrollView>
 

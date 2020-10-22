@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DrawActivity extends AppCompatActivity {
-    LinkedList<Path> r=new LinkedList<Path>();
+    LinkedList<Path> r=new LinkedList<Path>();  //记录原来的路径
     LinkedList<Integer> rcolor=new LinkedList<Integer>();
     LinkedList<Integer> rsize=new LinkedList<Integer>();
     String n="";
@@ -61,10 +61,7 @@ public class DrawActivity extends AppCompatActivity {
         ImageButton delete=findViewById(R.id.delete);
         Toolbar toolbar = findViewById(R.id.toolbar);
         final String path=intent.getStringExtra("path4");
-        if(path==null){
-
-        }
-        else {
+        if(path!=null){  //判断老文件新文件
             c.setPath(path);
         }
 
@@ -211,6 +208,7 @@ public class DrawActivity extends AppCompatActivity {
             if (!filePic.exists()) {
                 filePic.getParentFile().mkdirs();
                 filePic.createNewFile();
+                Log.v("file","createFile");
             }
             FileOutputStream fos = new FileOutputStream(filePic);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
@@ -225,27 +223,32 @@ public class DrawActivity extends AppCompatActivity {
     public void save(String path){
         CustomView c=findViewById(R.id.Custom);
         Bitmap bitmap=c.getMemBMP();
-        if(path==null){
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String imageFileName = "Draw_" + timeStamp + ".jpg";
-            String filePath=getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/"+imageFileName;
-            saveBitmap(bitmap,filePath);
-            Intent intent=
-                    new Intent(DrawActivity.this, MainActivity.class);
-            intent.putExtra("path",filePath);
-            setResult(11,intent);
-            finish();
-        }
-        else {
-            String filePath=path;
-            saveBitmap(bitmap,filePath);
-            Intent intent=
-                    new Intent(DrawActivity.this, MainActivity.class);
-            intent.putExtra("path",filePath);
-            intent.putExtra("change_n",n);
-            setResult(12,intent);
-            finish();
-        }
+            if(path==null){
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "Draw_" + timeStamp + ".jpg";
+                String filePath=getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/"+imageFileName;
+                saveBitmap(bitmap,filePath);
+                Intent intent=
+                        new Intent(DrawActivity.this, MainActivity.class);
+                intent.putExtra("path",filePath);
+                setResult(11,intent);
+            }
+            else {
+                File file=new File(path);  //删了重创一个，解决用glide的方法问题
+                if (file.isFile()) {
+                    file.delete();
+                }
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String imageFileName = "Draw_" + timeStamp + ".jpg";
+                String filePath=getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/"+imageFileName;
+                saveBitmap(bitmap,filePath);
+                Intent intent=
+                        new Intent(DrawActivity.this, MainActivity.class);
+                intent.putExtra("path",filePath);
+                intent.putExtra("change_n",n);
+                setResult(12,intent);
+            }
+        finish();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

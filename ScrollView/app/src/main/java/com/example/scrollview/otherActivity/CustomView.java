@@ -80,20 +80,6 @@ public class CustomView extends View {    //笔画列表
     }
 
     void drawStrokes() {
-        if (memCanvas == null) {           //缓冲位图
-            memBMP = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-            memCanvas = new Canvas(); //缓冲画布
-            memCanvas.setBitmap(memBMP); //为画布设置位图，图形实际保存在位图中
-            memPaint = new Paint(); //画笔
-            memPaint.setAntiAlias(true); //抗锯齿
-            memPaint.setColor(color); //画笔颜色
-            memPaint.setStyle(Paint.Style.STROKE); //设置填充类型
-            memPaint.setStrokeWidth(size); //设置画笔宽度
-            memCanvas.drawColor(Color.WHITE);
-            drawold();
-            Log.v("memCanvas","null");
-        }
-
         for (int i=0;i<listStrokes.size();i++) {   //每次都会重新画一次
             memPaint.setColor(colors.get(i));
             memPaint.setStrokeWidth(sizes.get(i));
@@ -107,7 +93,6 @@ public class CustomView extends View {    //笔画列表
 
     protected void onDraw(Canvas canvas) {  //初始化结束会调用，每次绘制也会调用
         Paint paint = new Paint();
-         Log.v("on","onDraw");
         if (memBMP != null){
             canvas.drawBitmap(memBMP, 0, 0, paint);
         }
@@ -123,6 +108,21 @@ public class CustomView extends View {    //笔画列表
                     e.printStackTrace();
                 }
             }
+        }
+
+        //在这里缓冲，放原来位置如果不画直接保存，位图为空，会闪退
+        if (memCanvas == null) {           //缓冲位图
+            memBMP = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            memCanvas = new Canvas(); //缓冲画布
+            memCanvas.setBitmap(memBMP); //为画布设置位图，图形实际保存在位图中
+            memPaint = new Paint(); //画笔
+            memPaint.setAntiAlias(true); //抗锯齿
+            memPaint.setColor(color); //画笔颜色
+            memPaint.setStyle(Paint.Style.STROKE); //设置填充类型
+            memPaint.setStrokeWidth(size); //设置画笔宽度
+            memCanvas.drawColor(Color.WHITE);
+            drawold();
+            Log.v("memCanvas","null");
         }
 
     }
@@ -156,14 +156,6 @@ public class CustomView extends View {    //笔画列表
 
     public List<Integer> getSizes() {
         return sizes;
-    }
-
-    public void setColors(List<Integer> colors) {
-        this.colors = colors;
-    }
-
-    public void setSizes(List<Integer> sizes) {
-        this.sizes = sizes;
     }
 
     public void setPath(String path) {

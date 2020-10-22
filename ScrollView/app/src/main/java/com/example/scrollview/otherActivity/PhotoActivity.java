@@ -20,19 +20,19 @@ import com.example.scrollview.MainActivity;
 import com.example.scrollview.R;
 import com.example.scrollview.db.ListDB;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class PhotoActivity extends AppCompatActivity {
     String n="";
+    String path="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {   //ViewPager+fragment实现滚动有时间再做
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
-        Button back=findViewById(R.id.back);
-        Button delete=findViewById(R.id.delete);
         Intent intent=getIntent();
-        String path=intent.getStringExtra("path");
+        path=intent.getStringExtra("path");
         n=intent.getStringExtra("n");
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,6 +79,10 @@ public class PhotoActivity extends AppCompatActivity {
                     intent.putExtra("delete_n",n);
                     setResult(111,intent);
                     Log.v("delete",n);
+                    File file=new File(path);
+                    if (file.isFile()) {
+                        file.delete();
+                    }
                     finish();
                 }
             }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
