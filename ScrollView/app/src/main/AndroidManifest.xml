@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
+<!-- https://www.jianshu.com/p/ed2714f7c7c5 图标的设置-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -43,7 +43,7 @@
         <activity
             android:name=".MainActivity"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

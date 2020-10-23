@@ -5,8 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.example.scrollview.Image;
-import com.example.scrollview.db.javabean.Infor;
+import com.example.scrollview.db.javabean.Image;
 
 import java.util.ArrayList;
 

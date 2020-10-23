@@ -13,25 +13,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.scrollview.db.InforDB;
 import com.example.scrollview.db.ListDB;
+import com.example.scrollview.db.javabean.Image;
 import com.example.scrollview.db.javabean.MyList;
-import com.example.scrollview.otherActivity.MusicActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 public class ListActivity extends AppCompatActivity {
     Boolean needRefresh=false;

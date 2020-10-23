@@ -1,6 +1,6 @@
-package com.example.scrollview;
+package com.example.scrollview.db.javabean;
 
-import android.graphics.Bitmap;
+import com.example.scrollview.db.GUID;
 
 public class Image {
     int type;
@@ -9,7 +9,7 @@ public class Image {
     public Image(String path,int type){
         this.type=type;//1是图片  2是音乐  3是视频 4是画板
         this.path=path;
-        this.id=GUID.getGUID();
+        this.id= GUID.getGUID();
     }
 
     public void setPath(String path) {

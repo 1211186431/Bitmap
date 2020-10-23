@@ -65,11 +65,11 @@ public class MusicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         Intent intent = getIntent();
-        Path = intent.getStringExtra("path_music");
+        Path = intent.getStringExtra("path2");
         seekBar = findViewById(R.id.seekbar);
         n=intent.getStringExtra("n");
         Log.v("music","music");
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar2);   //id出问题了
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);      //此处箭头为系统的图标资源
         //设置左上角导航键的点击监听事件

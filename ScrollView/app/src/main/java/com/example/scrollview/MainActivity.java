@@ -19,7 +19,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,16 +26,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.scrollview.db.InforDB;
 import com.example.scrollview.db.ListDB;
-import com.example.scrollview.db.javabean.Infor;
+import com.example.scrollview.db.javabean.Image;
 import com.example.scrollview.db.javabean.MyList;
 import com.example.scrollview.otherActivity.DrawActivity;
 import com.example.scrollview.otherActivity.MusicActivity;
@@ -44,14 +41,12 @@ import com.example.scrollview.otherActivity.VideoActivity;
 import com.example.scrollview.otherActivity.PhotoActivity;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<Image> list = new ArrayList<>();
@@ -98,16 +93,29 @@ public class MainActivity extends AppCompatActivity {
                                 startActivityForResult(intent, 0);
                                 break;
                             case 2:
-                                Intent intent2 = new Intent(MainActivity.this,MusicActivity.class);
-                                intent2.putExtra("path_music", list.get(n).getPath()); //忘初始化path了
-                                intent2.putExtra("n",n+"");
-                                startActivityForResult(intent2, 0);
+                                int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
+                                    Intent intent2 = new Intent(MainActivity.this,MusicActivity.class);
+                                    intent2.putExtra("path2", list.get(n).getPath()); //忘初始化path了
+                                    intent2.putExtra("n",n+"");
+                                    startActivityForResult(intent2, 0);
+                                }else{
+                                    //没有权限，向用户请求权限
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                                }
+
                                 break;
                             case 3:
-                                Intent intent3 = new Intent(MainActivity.this, VideoActivity.class);
-                                intent3.putExtra("path3", list.get(n).getPath()); //忘初始化path了
-                                intent3.putExtra("n",n+"");
-                                startActivityForResult(intent3, 0);
+
+                                int hasWriteStoragePermission2 = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                if (hasWriteStoragePermission2 == PackageManager.PERMISSION_GRANTED) {
+                                    Intent intent3 = new Intent(MainActivity.this, VideoActivity.class);
+                                    intent3.putExtra("path3", list.get(n).getPath()); //忘初始化path了
+                                    intent3.putExtra("n",n+"");
+                                    startActivityForResult(intent3, 0);
+                                }else{
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                                }
                                 break;
                             case 4:
                                 Intent intent4 = new Intent(MainActivity.this, DrawActivity.class);
@@ -469,11 +477,11 @@ public class MainActivity extends AppCompatActivity {
         }
         saveText(l_id);
         saveImage(l_id);
-        finish();
     }
     @Override
     protected void onStop() {
         super.onStop();
+        save();
         Log.v("stop","stop");
     }
 }

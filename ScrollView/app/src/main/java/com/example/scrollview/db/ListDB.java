@@ -4,11 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.scrollview.GUID;
 import com.example.scrollview.db.javabean.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class ListDB {
     private static final String TAG = "myTag";
