@@ -27,6 +27,6 @@
         android:layout_height="400px"
         android:id="@+id/image"
         android:layout_margin="5dp"
-        android:scaleType="center"/>
+        android:scaleType="center" />
 </LinearLayout>
 </androidx.cardview.widget.CardView>

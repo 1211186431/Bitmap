@@ -18,6 +18,9 @@
                 android:id="@+id/tu_ya"
                 android:title="涂鸦"/>
             <item
+                android:id="@+id/shou_xie"
+                android:title="手写"/>
+            <item
                 android:id="@+id/lu_xiang"
                 android:title="录像"/>
             <item

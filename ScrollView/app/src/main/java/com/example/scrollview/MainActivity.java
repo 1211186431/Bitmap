@@ -39,6 +39,7 @@ import com.example.scrollview.otherActivity.DrawActivity;
 import com.example.scrollview.otherActivity.MusicActivity;
 import com.example.scrollview.otherActivity.VideoActivity;
 import com.example.scrollview.otherActivity.PhotoActivity;
+import com.example.scrollview.otherActivity.WriteActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -118,10 +119,22 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 4:
-                                Intent intent4 = new Intent(MainActivity.this, DrawActivity.class);
-                                intent4.putExtra("path4", list.get(n).getPath()); //忘初始化path了
-                                intent4.putExtra("n",n+"");
-                                startActivityForResult(intent4, 0);
+                                String[] p2=list.get(n).getPath().split("/");
+                                String name2=p2[p2.length-1];
+                                Log.v("myTag",name2.charAt(0)+"");
+                                if(name2.charAt(0)=='D'){
+                                    Intent intent4 = new Intent(MainActivity.this, DrawActivity.class);
+                                    intent4.putExtra("path4", list.get(n).getPath()); //忘初始化path了
+                                    intent4.putExtra("n",n+"");
+                                    startActivityForResult(intent4, 0);
+                                }
+                                else {
+                                    Intent intent4 = new Intent(MainActivity.this, WriteActivity.class);
+                                    intent4.putExtra("path4", list.get(n).getPath()); //忘初始化path了
+                                    intent4.putExtra("n",n+"");
+                                    startActivityForResult(intent4, 0);
+                                }
+
                                 break;
                         }
                         break;
@@ -159,6 +172,10 @@ public class MainActivity extends AppCompatActivity {
     public void video(){
         Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
         startActivityForResult(intent, 3);
+    }
+    public  void write(){
+        Intent intent = new Intent(MainActivity.this, WriteActivity.class);
+        startActivityForResult(intent, 0);
     }
     public void l_music(){
         int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -300,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode==111){  //所有返回后删除
            int n=Integer.parseInt(data.getStringExtra("delete_n"));
            Log.v("myTag",list.get(n).getId());
-            list.remove(n);
+           list.remove(n);
         }
 
     }
@@ -438,6 +455,8 @@ public class MainActivity extends AppCompatActivity {
                 l_video();break;
             case R.id.detail:
                 detail();break;
+            case R.id.shou_xie:
+                write();break;
             default:break;
         }
 

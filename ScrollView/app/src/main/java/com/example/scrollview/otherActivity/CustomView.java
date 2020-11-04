@@ -103,7 +103,6 @@ public class CustomView extends View {    //笔画列表
                     fs = new FileInputStream(path);
                     Bitmap bitmap = BitmapFactory.decodeStream(fs);
                     canvas.drawBitmap(bitmap, new Matrix(), paint);  //利用每次重新画，画好后就保存了
-                    Log.v("123","123");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

@@ -169,6 +169,10 @@ public class DrawActivity extends AppCompatActivity {
                             intent.putExtra("delete_n",n);
                             setResult(111,intent);
                             Log.v("delete",n);
+                            File file=new File(path);
+                            if (file.isFile()) {
+                                file.delete();
+                            }
                             finish();
                         }
                     }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
