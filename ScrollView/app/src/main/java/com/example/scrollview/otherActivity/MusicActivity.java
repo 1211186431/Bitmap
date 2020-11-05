@@ -22,6 +22,10 @@ import com.example.scrollview.R;
 
 import java.io.IOException;
 
+/**
+ * 音乐播放界面，实验3简化版
+ * 只有进度条和播放按钮
+ */
 public class MusicActivity extends AppCompatActivity {
 
     int istouch = 1;
@@ -29,7 +33,7 @@ public class MusicActivity extends AppCompatActivity {
     String Path = "";
     MediaPlayer mVideoView;
     String n = "";
-    Boolean isStopThread = false;
+    Boolean isStopThread = false;  //线程控制变量  while（true）用变量控制关闭
 
     //处理进度条更新
     Handler mHandler = new Handler() {
@@ -69,7 +73,7 @@ public class MusicActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.seekbar);
         n=intent.getStringExtra("n");
         Log.v("music","music");
-        Toolbar toolbar = findViewById(R.id.toolbar2);   //id出问题了
+        Toolbar toolbar = findViewById(R.id.toolbar2);   //打开闪退  出错原因：id出问题了
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(android.R.drawable.ic_menu_revert);      //此处箭头为系统的图标资源
         //设置左上角导航键的点击监听事件

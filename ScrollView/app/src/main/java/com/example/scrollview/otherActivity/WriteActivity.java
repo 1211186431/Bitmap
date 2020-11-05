@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ *
+ * 手写功能界面
+ */
 public class WriteActivity extends AppCompatActivity {
     String n="";
     @Override

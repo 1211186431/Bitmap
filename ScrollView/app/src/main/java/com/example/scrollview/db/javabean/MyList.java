@@ -1,12 +1,21 @@
 package com.example.scrollview.db.javabean;
 
-public class MyList {
+
+public class MyList {  //列表类
     String l_id;
     String myText;
     int star;
     String mytime;
     String iTime;
 
+    /**
+     *
+     * @param l_id  主键id
+     * @param myText  文本内容
+     * @param star    星标的设置
+     * @param mytime   修改时间
+     * @param iTime    创建时间
+     */
     public MyList(String l_id, String myText, int star, String mytime,String iTime) {
         this.l_id = l_id;
         this.myText = myText;

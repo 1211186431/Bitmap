@@ -8,6 +8,9 @@ import com.example.scrollview.db.javabean.*;
 
 import java.util.ArrayList;
 
+/**
+ * 列表数据库操作
+ */
 public class ListDB {
     private static final String TAG = "myTag";
     private static ListDBHelper mDbHelper;   //采用单例模式
@@ -21,7 +24,7 @@ public class ListDB {
     }
 
 
-    //得到
+    //得到全部列表项
     public ArrayList<MyList> getAllList() {
         if (mDbHelper == null) {
             return null;

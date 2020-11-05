@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import com.example.scrollview.db.InforDB;
 import com.example.scrollview.db.ListDB;
-import com.example.scrollview.db.javabean.Image;
+import com.example.scrollview.db.javabean.MyImage;
 import com.example.scrollview.db.javabean.MyList;
 import com.example.scrollview.otherActivity.DrawActivity;
 import com.example.scrollview.otherActivity.MusicActivity;
@@ -50,11 +50,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<Image> list = new ArrayList<>();
-    String currentPhotoPath = "";
-    String l_id="";
+    ArrayList<MyImage> list = new ArrayList<>();  //多媒体类列表
+    String currentPhotoPath = ""; //照片保存路径
+    String l_id="";    //列表id
     Boolean needRefresh=false;
-    String myText="";
+    String myText="";   //内容
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        initPhotoError();  //https://blog.csdn.net/weixin_42105630/article/details/86305354
+        initPhotoError();  //解决拍照问题  https://blog.csdn.net/weixin_42105630/article/details/86305354
         final ListView listView = findViewById(R.id.list_item);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -84,16 +84,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.v("chick", "123");
                 TextView txtId = view.findViewById(R.id.GUID);
                 String id = txtId.getText().toString();
-                for (int n = 0; n < list.size(); n++) {
+                for (int n = 0; n < list.size(); n++) {//遍历列表查询点击的内容
                     if (list.get(n).getId().equals(id)) {
-                        switch (list.get(n).getType()) {
-                            case 1:
+                        switch (list.get(n).getType()) {  //不同种类打开不同的界面
+                            case 1:  //照片
                                 Intent intent = new Intent(MainActivity.this, PhotoActivity.class);
                                 intent.putExtra("path", list.get(n).getPath()); //忘初始化path了
                                 intent.putExtra("n",n+"");
                                 startActivityForResult(intent, 0);
                                 break;
-                            case 2:
+                            case 2:  //音乐
                                 int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
                                 if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
                                     Intent intent2 = new Intent(MainActivity.this,MusicActivity.class);
@@ -106,8 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                                 break;
-                            case 3:
-
+                            case 3: //视频
                                 int hasWriteStoragePermission2 = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
                                 if (hasWriteStoragePermission2 == PackageManager.PERMISSION_GRANTED) {
                                     Intent intent3 = new Intent(MainActivity.this, VideoActivity.class);
@@ -118,11 +117,11 @@ public class MainActivity extends AppCompatActivity {
                                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
                                 }
                                 break;
-                            case 4:
+                            case 4:  //画板
                                 String[] p2=list.get(n).getPath().split("/");
                                 String name2=p2[p2.length-1];
                                 Log.v("myTag",name2.charAt(0)+"");
-                                if(name2.charAt(0)=='D'){
+                                if(name2.charAt(0)=='D'){  //手写板，画板种类都是4  读文件名判断
                                     Intent intent4 = new Intent(MainActivity.this, DrawActivity.class);
                                     intent4.putExtra("path4", list.get(n).getPath()); //忘初始化path了
                                     intent4.putExtra("n",n+"");
@@ -142,8 +141,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
+
+    //打开系统相机照相
     public  void photo(){
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         try {
@@ -156,27 +156,39 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    //打开图库选择图片
     public void photo1(){
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");//选择图片
         startActivityForResult(intent, 1);
     }
+
+    //录音
     public void record(){
         Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
         startActivityForResult(intent,4);
     }
+
+    //画板
     public void myDraw(){
         Intent intent = new Intent(MainActivity.this, DrawActivity.class);
         startActivityForResult(intent, 0);
     }
+
+    //打开录像机
     public void video(){
         Intent intent = new Intent("android.media.action.VIDEO_CAPTURE");
         startActivityForResult(intent, 3);
     }
+
+    //手写板
     public  void write(){
         Intent intent = new Intent(MainActivity.this, WriteActivity.class);
         startActivityForResult(intent, 0);
     }
+
+    //打开文件管理器 选择音乐文件
     public void l_music(){
         int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (hasWriteStoragePermission == PackageManager.PERMISSION_GRANTED) {
@@ -186,8 +198,9 @@ public class MainActivity extends AppCompatActivity {
         }else{
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
         }
-
     }
+
+    //打开文件管理器 选择视频文件
     public void l_video(){
         //使用兼容库就无需判断系统版本
         int hasWriteStoragePermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -200,10 +213,9 @@ public class MainActivity extends AppCompatActivity {
             //没有权限，向用户请求权限
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
-
-
-
     }
+
+    //删除全部信息
     public void delete(){
         new android.app.AlertDialog.Builder(this).setTitle("delete").setMessage("是否真的删除?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
@@ -219,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-                inforDB.DeleteSql(l_id);
+                inforDB.DeleteSql(l_id);  //两个表都删
                 listDB.DeleteUseSql(l_id);
                 finish();
             }
@@ -230,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }).create().show();
     }
+
+    //显示详细信息
     public void detail(){
         ListDB listDB=new ListDB(MainActivity.this);
         ArrayList<MyList> myLists=listDB.getList(l_id);
@@ -242,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
             final View viewDialog = LayoutInflater.from(this).inflate(R.layout.detail, null, false);
             TextView lastTime=viewDialog.findViewById(R.id.lastTime);
             TextView insertTime=viewDialog.findViewById(R.id.insertTime);
-            lastTime.setText(myTime);
-            insertTime.setText(iTime);
+            lastTime.setText(myTime);  //修改时间
+            insertTime.setText(iTime); //创建时间
             builder.setTitle("详细信息")
                     .setView(viewDialog)
                     .setNegativeButton("返回", new DialogInterface.OnClickListener() {
@@ -255,17 +269,15 @@ public class MainActivity extends AppCompatActivity {
 
             builder.create().show();
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-
             switch (requestCode) {
                 case 1:   //相册照片
-                    //有时会黑屏 试试用线程异步操作
+                    //有时会黑屏
                     Uri uri = data.getData();
                     ContentResolver cr = this.getContentResolver();
                     try {
@@ -274,47 +286,46 @@ public class MainActivity extends AppCompatActivity {
                         String imageFileName = "JPEG_" + timeStamp + ".jpg";
                         String filePath = getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath() + "/" + imageFileName;
                         saveBitmap(bitmap, filePath);
-                        Image image1=new Image(filePath, 1);
-                        list.add(image1);
+                        MyImage myImage1 =new MyImage(filePath, 1);
+                        list.add(myImage1);
                     } catch (FileNotFoundException e) {
                         Log.e("Exception", e.getMessage(), e);
                     }
                     break;
                 case 2:   //拍照不用获取uri，会有问题
-                    Image image2=new Image(currentPhotoPath, 1);
-                    list.add(image2);
+                    MyImage myImage2 =new MyImage(currentPhotoPath, 1);
+                    list.add(myImage2);
                     break;
                 case 3:   //视频
                     Uri uri2 = data.getData();
                     String filePath = getAudioFilePathFromUri(uri2);
-                    Image image3=new Image(filePath, 3);
-                    list.add(image3);
+                    MyImage myImage3 =new MyImage(filePath, 3);
+                    list.add(myImage3);
                     break;
                 case 4:  //音频
                     Uri uri3 = data.getData();
                     String filePath2 = getAudioFilePathFromUri(uri3);
-                    Image image4=new Image(filePath2, 2);
-                    list.add(image4);
+                    MyImage myImage4 =new MyImage(filePath2, 2);
+                    list.add(myImage4);
                 default:
                     break;
             }
         }
         if (requestCode == 0) {  //画图返回
             switch (resultCode){
-                case 11:
-                    Image image=new Image(data.getStringExtra("path"), 4);
-                    list.add(image);
+                case 11: //新文件返回
+                    MyImage myImage =new MyImage(data.getStringExtra("path"), 4);
+                    list.add(myImage);
                     break;
-                case 12:
+                case 12:  //老文件返回
                     int n=Integer.parseInt(data.getStringExtra("change_n"));
                     list.get(n).setPath(data.getStringExtra("path"));
                     break;
                 default:
                     break;
             }
-
         }
-        if(resultCode==111){  //所有返回后删除
+        if(resultCode==111){  //所有种类 返回后的删除
            int n=Integer.parseInt(data.getStringExtra("delete_n"));
            Log.v("myTag",list.get(n).getId());
            list.remove(n);
@@ -327,6 +338,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_main, menu);
         return true;
     }
+
+    //uri查找路径
     private String getAudioFilePathFromUri(Uri uri) {
         Cursor cursor = getContentResolver()
                 .query(uri, null, null, null, null);
@@ -335,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
         return cursor.getString(index);
     }
 
+    //刷新界面
     public void refresh_list() {
         ImageAdapter adapter = new ImageAdapter(list, MainActivity.this);
         ListView l = findViewById(R.id.list_item);
@@ -391,6 +405,8 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i("tag", "saveBitmap success: " + filePic.getAbsolutePath());
     }
+
+    //保存文字
     public void saveText(String l_id){  //存文字
         ListDB listDB=new ListDB(this);
         EditText e1=findViewById(R.id.text);
@@ -398,6 +414,8 @@ public class MainActivity extends AppCompatActivity {
         String myText=e1.getText().toString();
         listDB.UpdateText(l_id,myText,timeStamp);
     }
+
+    //保存多媒体
     public void saveImage(String l_id){
         InforDB inforDB=new InforDB(this);
         inforDB.DeleteSql(l_id);
@@ -407,20 +425,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public void deleteImage(int n){
-        InforDB inforDB=new InforDB(this);
-        Image dImage=list.get(n);
-        list.remove(n);
-        Log.v("myTag",dImage.getId());
-        inforDB.DeleteOne(dImage.getId());
-        inforDB.close();
-    }
 
+    //加载信息
     public void setInfor(){
         InforDB inforDB=new InforDB(this);
         EditText editText=findViewById(R.id.text);
         editText.setText(myText);
-        ArrayList<Image> i1=inforDB.getInf(l_id);
+        //查询存储的myImage
+        ArrayList<MyImage> i1=inforDB.getInf(l_id);
         if(!i1.isEmpty()){
             list.addAll(i1);
         }
@@ -463,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //权限设置是返回   https://www.jianshu.com/p/ccea3c2f9cfa
+    //权限设置时返回   https://www.jianshu.com/p/ccea3c2f9cfa
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         //通过requestCode来识别是否同一个请求

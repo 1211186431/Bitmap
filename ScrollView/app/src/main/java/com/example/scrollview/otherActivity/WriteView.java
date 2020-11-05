@@ -29,9 +29,9 @@ public class WriteView extends View {    //笔画列表
     List<Integer> colors = new ArrayList<Integer>();
     List<Integer> sizes = new ArrayList<Integer>();
     Path pathStroke;
-    Bitmap memBMP;
+    Bitmap memBMP;     //手写时保存的图片
     Paint memPaint;
-    Canvas memCanvas;
+    Canvas memCanvas;  //手写时保存的画板
     boolean mBooleanOnTouch = false;   //上一个点
     float oldx;
     float oldy;
@@ -39,18 +39,17 @@ public class WriteView extends View {    //笔画列表
     int color = Color.BLACK;
     String path = "";//图片路径
 
-    long endTime=0;
-    boolean isStopThread=false;
-    boolean n;
-    Bitmap saveBMP;
-    Canvas saveCanvas;
-    Stack<Bitmap> list=new Stack<>();
-    int my_x;
-    int old_x=0;
+    long endTime=0;   //抬笔时间
+    boolean isStopThread=false; //线程控制变量
+    Bitmap saveBMP;    //保存的位图
+    Canvas saveCanvas;  //全部图像的画板
+    Stack<Bitmap> list=new Stack<>();   //用栈 保存每一次手写后的位图  用于回退
+    int my_x;  //存放的x坐标
+    int old_x=0;  //老文件的x坐标
     int my_y;
     int old_y=0;
     int x1 = 0;
-    int b=0;
+    int b=0;  //在落下 与 抬起之间 加锁 控制线程
     Bitmap oldBitmap;
     Handler mHandler = new Handler() {
         @Override
@@ -58,7 +57,8 @@ public class WriteView extends View {    //笔画列表
             switch (msg.what) {
                 case 0:
                     if(memBMP!=null){
-                        if(endTime!=0&&System.currentTimeMillis()-endTime>300&&n&&b!=0){
+                        //若抬起时间超过300ms，并且用户没有在写
+                        if(endTime!=0&&System.currentTimeMillis()-endTime>300&&b!=0){
                             Log.v("myTag","s");
                             Bitmap bitmap1 = resizeImage(memBMP, 300, 300);
                             list.push(bitmap1);
@@ -125,7 +125,6 @@ public class WriteView extends View {    //笔画列表
                 listStrokes.add(pathStroke);
                 colors.add(color);
                 sizes.add(size);
-                n=false;
                 b=0;
                 break;
             case MotionEvent.ACTION_MOVE://移动
@@ -144,7 +143,6 @@ public class WriteView extends View {    //笔画列表
                     drawStrokes();
                     mBooleanOnTouch = false;//一个笔画已经画完
                     x1 += 20;
-                    n=true;
                     b=1;
                     endTime=System.currentTimeMillis();
                 }
@@ -167,28 +165,30 @@ public class WriteView extends View {    //笔画列表
 
     protected void onDraw(Canvas canvas) {  //初始化结束会调用，每次绘制也会调用
         Paint paint = new Paint();
+        //加载老文件的图片
         if(oldBitmap!=null){     //从下面放上面了 原来第一画不会加载
-            canvas.drawBitmap(oldBitmap, 0,0, paint);
-            saveCanvas.drawBitmap(oldBitmap, 0,0, paint);
+            canvas.drawBitmap(oldBitmap, 0,0, paint);  //在界面上画一次
+            saveCanvas.drawBitmap(oldBitmap, 0,0, paint);  //要保存的画板
         }
         if (memBMP != null &&saveBMP!=null) {
             if(!list.isEmpty()){
                 my_x=old_x;
                 my_y=old_y;
-                for(int i=0;i<list.size();i++){
+                for(int i=0;i<list.size();i++){  //每次把存储的缩小位图，按照x，y坐标画在面板上
                     canvas.drawBitmap(list.get(i),my_x, my_y, paint);
                     saveCanvas.drawBitmap(list.get(i),my_x, my_y, paint);
                     Log.v("tag",getWidth()+" 1 "+getHeight());
                     if(my_x<getWidth()-300){
-                        my_x+=getWidth()*0.1;
+                        my_x+=getWidth()*0.1;    //每次向有移动屏幕的0.1  一行显示10个左右
+                                                //图片大小是0.2 移动0.1 会有交叉  这样更适用于写字
                     }
-                    else {
+                    else {     //换行
                         my_x=0;
                         my_y+=getHeight()*0.1;
                     }
                 }
             }
-            canvas.drawBitmap(memBMP, 0, 0, paint);
+            canvas.drawBitmap(memBMP, 0, 0, paint);  //把用户正在写的笔画 画出来
         } else {
             if (!path.equals("")) {
                 FileInputStream fs = null;
@@ -201,7 +201,8 @@ public class WriteView extends View {    //笔画列表
                 }
             }
         }
-        //在这里缓冲，放原来位置如果不画直接保存，位图为空，会闪退
+
+        //初始化
         if (memCanvas == null && saveCanvas==null) {           //缓冲位图
             memBMP = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
             memCanvas = new Canvas(); //缓冲画布
@@ -246,13 +247,14 @@ public class WriteView extends View {    //笔画列表
     }
 
     // 缩放
+    //原方法是按具体值缩放，目前用比例设置
     public static Bitmap resizeImage(Bitmap bitmap, int width, int height) {
         int originWidth = bitmap.getWidth();
         int originHeight = bitmap.getHeight();
         float scaleWidth = ((float) width) / originWidth;
         float scaleHeight = ((float) height) / originHeight;
         Matrix matrix = new Matrix();
-        matrix.postScale(0.2f ,0.2f);
+        matrix.postScale(0.2f ,0.2f);  //缩放到原界面0.2倍
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, originWidth,
                 originHeight, matrix, true);
         return resizedBitmap;

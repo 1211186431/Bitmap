@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.example.scrollview.db.InforDB;
 import com.example.scrollview.db.ListDB;
-import com.example.scrollview.db.javabean.Image;
+import com.example.scrollview.db.javabean.MyImage;
 import com.example.scrollview.db.javabean.MyList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -38,7 +38,7 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         ListDB listDB=new ListDB(this);
-        ArrayList<MyList> items = listDB.getAllList();
+        ArrayList<MyList> items = listDB.getAllList();  //获取列表
         ListAdapter listAdapter=new ListAdapter(items,ListActivity.this);
         needRefresh=true;
         ListView list = (ListView)findViewById(R.id.list);
@@ -56,13 +56,13 @@ public class ListActivity extends AppCompatActivity {
                 String myText=t2.getText().toString();
                 Intent intent=
                         new Intent(ListActivity.this,MainActivity.class);
-                intent.putExtra("l_id",id);
+                intent.putExtra("l_id",id);   //把id和内容传过去
                 intent.putExtra("myText",myText);
                 Log.v("Tag","1+"+id);
                 startActivity(intent);
             }
         });
-        FloatingActionButton fab = findViewById(R.id.insert);
+        FloatingActionButton fab = findViewById(R.id.insert);   //悬浮的增加按钮
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +148,7 @@ public class ListActivity extends AppCompatActivity {
     }
     public void listDeleteFile(String l_id){//删除时删除存的照片
         InforDB inforDB=new InforDB(this);
-        ArrayList<Image> list=inforDB.getInf(l_id);
+        ArrayList<MyImage> list=inforDB.getInf(l_id);
         for(int t=0;t<list.size();t++){
             if(list.get(t).getType()==1||list.get(t).getType()==4){
                 String deletePath=list.get(t).getPath();

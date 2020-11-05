@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-
+/**
+ * 数据库创建
+ */
 public class ListDBHelper extends SQLiteOpenHelper  {
     private final static String DATABASE_NAME = "mydb";//数据库名字
     private final static int DATABASE_VERSION = 2;  //等级 注意

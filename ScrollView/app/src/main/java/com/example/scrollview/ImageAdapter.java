@@ -10,18 +10,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.scrollview.db.javabean.Image;
+import com.example.scrollview.db.javabean.MyImage;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 
+/**
+ * 内容界面的列表适配器
+ * 加载多媒体内容
+ */
 public class ImageAdapter extends BaseAdapter {
 
-    private ArrayList<Image> mData;
+    private ArrayList<MyImage> mData;
     private Context mContext;
 
-    public ImageAdapter( ArrayList<Image> mData, Context mContext) {
+    public ImageAdapter(ArrayList<MyImage> mData, Context mContext) {
         this.mData = mData;
         this.mContext = mContext;
     }
@@ -47,7 +51,7 @@ public class ImageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         switch (mData.get(position).getType()){
             case 1:
-            case 4:
+            case 4:            //1，4是图片
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item,parent,false);
                 ImageView image = (ImageView) convertView.findViewById(R.id.image);
                 TextView id = (TextView) convertView.findViewById(R.id.GUID);
@@ -66,18 +70,18 @@ public class ImageAdapter extends BaseAdapter {
 //                    e.printStackTrace();
 //                }
                 break;
-            case 2:
+            case 2:       //2是音频
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item2,parent,false);
                 TextView id2 = (TextView) convertView.findViewById(R.id.GUID);
                 TextView n=convertView.findViewById(R.id.name);
                 id2.setText(mData.get(position).getId());
                 String path2=mData.get(position).getPath();
                 String[] p=path2.split("/");
-                String name=p[p.length-1];
+                String name=p[p.length-1];   //获取音乐名称
                 n.setText(name);
                 Log.v("p",p[p.length-1]);
                 break;
-            case 3:
+            case 3:   //视频
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item3,parent,false);
                 TextView id3 = (TextView) convertView.findViewById(R.id.GUID);
                 TextView n2=convertView.findViewById(R.id.name);

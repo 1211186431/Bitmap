@@ -22,6 +22,11 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.scrollview.MainActivity;
 import com.example.scrollview.R;
 
+/**
+ * 视频播放界面
+ * 和音乐播放界面类似
+ * VideoView实现
+ */
 public class VideoActivity extends AppCompatActivity {
     Boolean prepare =false;
     int istouch = 1;

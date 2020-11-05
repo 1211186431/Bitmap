@@ -13,6 +13,9 @@ import com.example.scrollview.db.javabean.MyList;
 
 import java.util.ArrayList;
 
+/**
+ * 列表界面适配器
+ */
 public class ListAdapter extends BaseAdapter {
 
     private ArrayList<MyList> mData;
@@ -39,7 +42,7 @@ public class ListAdapter extends BaseAdapter {
     }
 
 
-
+   //显示标题，修改时间，星标
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(!mData.isEmpty()){

@@ -37,19 +37,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 画板界面
+ */
 public class DrawActivity extends AppCompatActivity {
     LinkedList<Path> r=new LinkedList<Path>();  //记录原来的路径
-    LinkedList<Integer> rcolor=new LinkedList<Integer>();
-    LinkedList<Integer> rsize=new LinkedList<Integer>();
-    String n="";
-    int PColor=0;
+    LinkedList<Integer> rcolor=new LinkedList<Integer>();  //记录颜色
+    LinkedList<Integer> rsize=new LinkedList<Integer>();   //记录大小
+    String n="";        //在原来的第n个，传回去 方便删除修改
+    int PColor=0;       //画笔颜色
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_draw);
         Intent intent=getIntent();
         CustomView c=findViewById(R.id.Custom);
-        n=intent.getStringExtra("n");
+        n=intent.getStringExtra("n");  //接收n
         ImageButton back=findViewById(R.id.back);
         ImageButton go=findViewById(R.id.go);
         final Button eraser=findViewById(R.id.Eraser);
@@ -60,6 +63,7 @@ public class DrawActivity extends AppCompatActivity {
             c.setPath(path);
         }
 
+        //颜色下拉框适配器 ，显示图片
         ArrayList<Map<String,Object>> list=setColor();
         SimpleAdapter simpleAdapter=new SimpleAdapter(DrawActivity.this,list,R.layout.item_color,new String[]{"color","pic"},new int[]{R.id.color_name,R.id.color_image});
         Spinner spinner=findViewById(R.id.color);
@@ -77,6 +81,8 @@ public class DrawActivity extends AppCompatActivity {
                 // Another interface callbac
             }
         });
+
+        //大小下拉框适配器，显示颜色
         ArrayList<Map<String,Object>> list_size=setSize();
         SimpleAdapter simpleAdapter2=new SimpleAdapter(DrawActivity.this,list_size,R.layout.item_size,new String[]{"color","pic"},new int[]{R.id.color_name,R.id.color_image});
         Spinner spinner_size=findViewById(R.id.size);
@@ -106,17 +112,18 @@ public class DrawActivity extends AppCompatActivity {
             }
 
         });
+
+        //回退
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CustomView c=findViewById(R.id.Custom);
-                List<Path> l=c.getListStrokes();
-                if(l.size()-1>=0){
-                    Log.v("Tag",l.size()+" "+c.getColors().size()+" "+c.getSizes().size());
-                    r.push(l.get(l.size()-1));
+                List<Path> l=c.getListStrokes();   //获取原来的路径列表
+                if(l.size()-1>=0){//如果能回退，
+                    r.push(l.get(l.size()-1));  //把回退的路径记录
                     rcolor.push(c.getColors().get(l.size()-1));
                     rsize.push(c.getSizes().get(l.size()-1));
-                    l.remove(l.size()-1);   //颜色删除写那边了
+                    l.remove(l.size()-1);   //删除路径，颜色删除写那边了
                     c.backListStrokes(l);
                     c.drawStrokes();
                 }
@@ -124,13 +131,15 @@ public class DrawActivity extends AppCompatActivity {
                     Toast.makeText(DrawActivity.this,"没有上一步",Toast.LENGTH_LONG).show();
             }
         });
+
+        //前进
         go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CustomView c=findViewById(R.id.Custom);
                 List<Path> l=c.getListStrokes();
                 if(!r.isEmpty()){
-                    l.add(r.pop());
+                    l.add(r.pop());  //把存储删除的路径再添回来
                     c.goListStrokes(rcolor.pop(),rsize.pop(),l);
                     c.drawStrokes();
                 }
@@ -188,7 +197,7 @@ public class DrawActivity extends AppCompatActivity {
         });
     }
     /**
-     * 保存bitmap到本地
+     * 把bitmap保存到path路径
      *
      * @param bitmap Bitmap
      */
@@ -219,10 +228,12 @@ public class DrawActivity extends AppCompatActivity {
         }
         Log.i("tag", "saveBitmap success: " + filePic.getAbsolutePath());
     }
+
+    //保存
     public void save(String path){
         CustomView c=findViewById(R.id.Custom);
         Bitmap bitmap=c.getMemBMP();
-            if(path==null){
+            if(path==null){ //新文件
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 String imageFileName = "Draw_" + timeStamp + ".jpg";
                 String filePath=getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath()+"/"+imageFileName;
@@ -232,7 +243,7 @@ public class DrawActivity extends AppCompatActivity {
                 intent.putExtra("path",filePath);
                 setResult(11,intent);
             }
-            else {
+            else {     //老文件
                 File file=new File(path);  //删了重创一个，解决用glide的方法问题
                 if (file.isFile()) {
                     file.delete();
@@ -250,7 +261,7 @@ public class DrawActivity extends AppCompatActivity {
         finish();
     }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {  //注册toolbar
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_draw, menu);
         return true;
@@ -258,7 +269,7 @@ public class DrawActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
 
-                                    ContextMenu.ContextMenuInfo menuInfo) {
+                                    ContextMenu.ContextMenuInfo menuInfo) {//注册菜单
 
         // Log.v(TAG, "WordItemFragment::onCreateContextMenu()");
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -325,6 +336,8 @@ public class DrawActivity extends AppCompatActivity {
         list.add(a11);
         return list;
     }
+
+    //设置画笔大小
     public void setPSize(String color){
         CustomView c=findViewById(R.id.Custom);
         switch (color){
@@ -338,6 +351,7 @@ public class DrawActivity extends AppCompatActivity {
                 break;
         }
     }
+    //设置画笔颜色
     public void setPColor(String color){
         CustomView c=findViewById(R.id.Custom);
         switch (color){

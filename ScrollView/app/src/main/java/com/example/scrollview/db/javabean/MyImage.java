@@ -2,12 +2,18 @@ package com.example.scrollview.db.javabean;
 
 import com.example.scrollview.db.GUID;
 
-public class Image {
+public class MyImage {  //存储多媒体类
     int type;
     String id;
     String path;
-    public Image(String path,int type){
-        this.type=type;//1是图片  2是音乐  3是视频 4是画板
+
+    /**
+     *               id自动生成
+     * @param path  路径
+     * @param type  类型 1是图片  2是音乐  3是视频 4是画板/手写板
+     */
+    public MyImage(String path, int type){
+        this.type=type;//
         this.path=path;
         this.id= GUID.getGUID();
     }

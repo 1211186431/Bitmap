@@ -24,6 +24,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * 照片展示页
+ * 显示照片，删除，返回 3个功能
+ */
 public class PhotoActivity extends AppCompatActivity {
     String n="";
     String path="";

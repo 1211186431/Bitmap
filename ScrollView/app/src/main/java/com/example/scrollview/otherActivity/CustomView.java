@@ -22,19 +22,22 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomView extends View {    //笔画列表
-    List<Path> listStrokes = new ArrayList<Path>();
-    List<Integer> colors=new ArrayList<Integer>();
-    List<Integer> sizes=new ArrayList<Integer>();
-    Path pathStroke;
-    Bitmap memBMP;
-    Paint memPaint;
-    Canvas memCanvas;
+/**
+ * 自定义画图控件
+ */
+public class CustomView extends View {
+    List<Path> listStrokes = new ArrayList<Path>();//笔画列表
+    List<Integer> colors=new ArrayList<Integer>();   //颜色列表
+    List<Integer> sizes=new ArrayList<Integer>();    //大小列表
+    Path pathStroke; //path 路径类
+    Bitmap memBMP;  //存canvas的位图
+    Paint memPaint;  //笔
+    Canvas memCanvas; //画板
     boolean mBooleanOnTouch = false;   //上一个点
-    float oldx;
-    float oldy;
-    int size=5;
-    int color=Color.RED;
+    float oldx;    //原x
+    float oldy;    //原y
+    int size=5;    //画笔大小
+    int color=Color.RED;  //画笔颜色
     String path="";//图片路径
 
 
@@ -84,7 +87,6 @@ public class CustomView extends View {    //笔画列表
             memPaint.setColor(colors.get(i));
             memPaint.setStrokeWidth(sizes.get(i));
             memCanvas.drawPath(listStrokes.get(i), memPaint);
-
         }
         invalidate(); //刷新屏幕
     }
@@ -134,16 +136,18 @@ public class CustomView extends View {    //笔画列表
         this.size = size;
     }
 
+    //回退功能
     public void backListStrokes(List<Path> listStrokes) {
         this.listStrokes = listStrokes;
-        colors.remove(colors.size()-1);
+        colors.remove(colors.size()-1);   //颜色，笔画回退
         sizes.remove(sizes.size()-1);
-        memCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);//清空画布
-        drawold();
-
+        memCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);//画面清空
+        drawold();//把原来的图画一次
     }
+
+    //前进功能
     public void goListStrokes(int color,int size,List<Path> listStrokes){  //恢复原来的颜色大小
-        this.listStrokes = listStrokes;
+        this.listStrokes = listStrokes;   //获取新的路径列表  恢复数据在activity进行
         this.colors.add(color);
         this.sizes.add(size);
         memCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);//清空画布
@@ -168,6 +172,8 @@ public class CustomView extends View {    //笔画列表
     public Bitmap getMemBMP(){
         return memBMP;
     }
+
+    //如果有原来的图片文件，每次画都要加载   部分地方可能会有重复可以优化
     public void drawold(){  //每次画是都重画，每次都重新加载一次
         if(!path.equals("")){
             FileInputStream fs = null;
